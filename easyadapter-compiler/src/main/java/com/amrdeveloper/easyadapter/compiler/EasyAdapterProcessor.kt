@@ -49,6 +49,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val annotation = element.getAnnotation(RecyclerAdapter::class.java)
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
+        val generateUpdateData = annotation.generateUpdateData
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
@@ -58,6 +59,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
             adapterClassName,
             className,
             layoutId,
+            generateUpdateData,
             viewBindingDataList
         )
     }

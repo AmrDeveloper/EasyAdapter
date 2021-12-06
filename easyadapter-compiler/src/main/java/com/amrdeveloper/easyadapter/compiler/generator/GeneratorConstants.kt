@@ -11,5 +11,4 @@ object GeneratorConstants {
     val recyclerViewHolderClassName = ClassName("androidx.recyclerview.widget.RecyclerView", "ViewHolder")
 
     val listClassName = ClassName("kotlin.collections", "List")
-
 }

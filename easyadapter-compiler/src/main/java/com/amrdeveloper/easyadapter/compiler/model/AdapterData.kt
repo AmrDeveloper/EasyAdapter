@@ -6,5 +6,6 @@ data class AdapterData (
     val adapterClassName : String,
     val modelClassName : String,
     val layoutId : String,
+    val generateUpdateData : Boolean,
     val bindingDataList : List<BindingData>
 )

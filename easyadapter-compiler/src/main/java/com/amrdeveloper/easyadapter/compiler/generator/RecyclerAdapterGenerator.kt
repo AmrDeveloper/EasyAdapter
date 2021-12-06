@@ -24,6 +24,7 @@ class RecyclerAdapterGenerator (private val adapterData: AdapterData) : AdapterG
         .addProperty(PropertySpec.builder("items", itemsListClassName)
             .addModifiers(KModifier.PRIVATE)
             .initializer("items")
+            .mutable(true)
             .build()
         )
         .addBaseMethods()
@@ -55,6 +56,15 @@ class RecyclerAdapterGenerator (private val adapterData: AdapterData) : AdapterG
             .addStatement("viewHolder.bind(items[position])")
             .build()
         )
+
+        if (adapterData.generateUpdateData) {
+            addFunction(FunSpec.builder("updateData")
+                .addParameter("newList", itemsListClassName)
+                .addStatement("items = newList")
+                .addStatement("notifyDataSetChanged()")
+                .build()
+            )
+        }
     }
 
     private fun TypeSpec.Builder.addViewHolderType(): TypeSpec.Builder = addType(

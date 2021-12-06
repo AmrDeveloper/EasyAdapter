@@ -6,4 +6,5 @@ annotation class RecyclerAdapter (
     val appPackageName : String,
     val layoutId : String,
     val customClassName : String = "",
+    val generateUpdateData : Boolean = false
 )
