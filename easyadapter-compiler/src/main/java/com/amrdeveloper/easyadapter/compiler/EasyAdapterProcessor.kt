@@ -1,11 +1,12 @@
 package com.amrdeveloper.easyadapter.compiler
 
 import com.amrdeveloper.easyadapter.adapter.RecyclerAdapter
+import com.amrdeveloper.easyadapter.bind.BindBackgroundColor
+import com.amrdeveloper.easyadapter.bind.BindImageRes
+import com.amrdeveloper.easyadapter.bind.BindBackgroundRes
 import com.amrdeveloper.easyadapter.bind.BindText
 import com.amrdeveloper.easyadapter.compiler.generator.RecyclerAdapterGenerator
-import com.amrdeveloper.easyadapter.compiler.model.AdapterData
-import com.amrdeveloper.easyadapter.compiler.model.BindingData
-import com.amrdeveloper.easyadapter.compiler.model.BindingTextData
+import com.amrdeveloper.easyadapter.compiler.model.*
 import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
 import com.squareup.kotlinpoet.FileSpec
 import java.io.File
@@ -66,8 +67,26 @@ class EasyAdapterProcessor : AbstractProcessor() {
         enclosedElements.forEach {
             val textViewBinding = it.getAnnotation(BindText::class.java)
             if (textViewBinding != null) {
-                val bindingData = BindingTextData(textViewBinding.value, textViewBinding.viewId)
-                viewBindingDataList.add(bindingData)
+                val binding = BindingTextData(textViewBinding.value, textViewBinding.viewId)
+                viewBindingDataList.add(binding)
+            }
+
+            val imageResBinding = it.getAnnotation(BindImageRes::class.java)
+            if (imageResBinding != null) {
+                val binding = BindImageResData(imageResBinding.value, imageResBinding.viewId)
+                viewBindingDataList.add(binding)
+            }
+
+            val backgroundResBinding = it.getAnnotation(BindBackgroundRes::class.java)
+            if (backgroundResBinding != null) {
+                val binding = BindBackgroundResData(backgroundResBinding.value, backgroundResBinding.viewId)
+                viewBindingDataList.add(binding)
+            }
+
+            val backgroundColorBinding = it.getAnnotation(BindBackgroundColor::class.java)
+            if (backgroundColorBinding != null) {
+                val binding = BindBackgroundColorData(backgroundColorBinding.value, backgroundColorBinding.viewId)
+                viewBindingDataList.add(binding)
             }
         }
         return viewBindingDataList
