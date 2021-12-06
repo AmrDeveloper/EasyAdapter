@@ -1,10 +1,13 @@
 package com.amrdeveloper.easyadapter.compiler
 
+import com.amrdeveloper.easyadapter.adapter.ListAdapter
 import com.amrdeveloper.easyadapter.adapter.RecyclerAdapter
 import com.amrdeveloper.easyadapter.bind.BindBackgroundColor
 import com.amrdeveloper.easyadapter.bind.BindImageRes
 import com.amrdeveloper.easyadapter.bind.BindBackgroundRes
 import com.amrdeveloper.easyadapter.bind.BindText
+import com.amrdeveloper.easyadapter.compiler.generator.ListAdapterGenerator
+import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
 import com.amrdeveloper.easyadapter.compiler.generator.RecyclerAdapterGenerator
 import com.amrdeveloper.easyadapter.compiler.model.*
 import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
@@ -33,9 +36,18 @@ class EasyAdapterProcessor : AbstractProcessor() {
 
         val recyclerAdapterElements = environment.getElementsAnnotatedWith(RecyclerAdapter::class.java)
         for (adapterElement in recyclerAdapterElements) {
-            val adapterModel = parseRecyclerAdapterClass(adapterElement)
-            FileSpec.builder(adapterModel.adapterPackageName, adapterModel.adapterClassName)
-                .addType(RecyclerAdapterGenerator(adapterModel).generate())
+            val recyclerAdapter = parseRecyclerAdapterClass(adapterElement)
+            FileSpec.builder(recyclerAdapter.adapterPackageName, recyclerAdapter.adapterClassName)
+                .addType(RecyclerAdapterGenerator(recyclerAdapter).generate())
+                .build()
+                .writeTo(File(kaptGeneratedDir))
+        }
+
+        val listAdapterElements = environment.getElementsAnnotatedWith(ListAdapter::class.java)
+        for (adapterElement in listAdapterElements) {
+            val listAdapter = parseListAdapterClass(adapterElement)
+            FileSpec.builder(listAdapter.adapterPackageName, listAdapter.adapterClassName)
+                .addType(ListAdapterGenerator(listAdapter).generate())
                 .build()
                 .writeTo(File(kaptGeneratedDir))
         }
@@ -43,7 +55,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         return true
     }
 
-    private fun parseRecyclerAdapterClass(element: Element) : AdapterData {
+    private fun parseRecyclerAdapterClass(element: Element) : RecyclerAdapterData {
         val className = element.simpleName.toString()
         val adapterPackageName = processingEnv.elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(RecyclerAdapter::class.java)
@@ -53,49 +65,75 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
-        return AdapterData (
+        return RecyclerAdapterData (
             appPackageName,
             adapterPackageName,
             adapterClassName,
             className,
             layoutId,
+            viewBindingDataList,
             generateUpdateData,
-            viewBindingDataList
+        )
+    }
+
+    private fun parseListAdapterClass(element: Element) : ListAdapterData {
+        val className = element.simpleName.toString()
+        val adapterPackageName = processingEnv.elementUtils.getPackageOf(element).toString()
+        val annotation = element.getAnnotation(ListAdapter::class.java)
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val diffUtilContent = annotation.diffUtilContent
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+
+        return ListAdapterData (
+            appPackageName,
+            adapterPackageName,
+            adapterClassName,
+            className,
+            layoutId,
+            viewBindingDataList,
+            diffUtilContent,
         )
     }
 
     private fun parseAdapterBindingList(enclosedElements : List<Element>) : List<BindingData> {
         val viewBindingDataList = mutableListOf<BindingData>()
-        enclosedElements.forEach {
-            val textViewBinding = it.getAnnotation(BindText::class.java)
+        for (element in enclosedElements) {
+            val textViewBinding = element.getAnnotation(BindText::class.java)
             if (textViewBinding != null) {
                 val binding = BindingTextData(textViewBinding.value, textViewBinding.viewId)
                 viewBindingDataList.add(binding)
+                continue
             }
 
-            val imageResBinding = it.getAnnotation(BindImageRes::class.java)
+            val imageResBinding = element.getAnnotation(BindImageRes::class.java)
             if (imageResBinding != null) {
                 val binding = BindImageResData(imageResBinding.value, imageResBinding.viewId)
                 viewBindingDataList.add(binding)
+                continue
             }
 
-            val backgroundResBinding = it.getAnnotation(BindBackgroundRes::class.java)
+            val backgroundResBinding = element.getAnnotation(BindBackgroundRes::class.java)
             if (backgroundResBinding != null) {
                 val binding = BindBackgroundResData(backgroundResBinding.value, backgroundResBinding.viewId)
                 viewBindingDataList.add(binding)
+                continue
             }
 
-            val backgroundColorBinding = it.getAnnotation(BindBackgroundColor::class.java)
+            val backgroundColorBinding = element.getAnnotation(BindBackgroundColor::class.java)
             if (backgroundColorBinding != null) {
                 val binding = BindBackgroundColorData(backgroundColorBinding.value, backgroundColorBinding.viewId)
                 viewBindingDataList.add(binding)
+                continue
             }
         }
         return viewBindingDataList
     }
 
     override fun getSupportedAnnotationTypes() = mutableSetOf<String> (
-        RecyclerAdapter::class.java.canonicalName
+        RecyclerAdapter::class.java.canonicalName,
+        ListAdapter::class.java.canonicalName
     )
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()

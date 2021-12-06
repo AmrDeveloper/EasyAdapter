@@ -1,11 +1,10 @@
 package com.amrdeveloper.easyadapter.compiler.model
 
-data class AdapterData (
-    val appPackageId : String,
-    val adapterPackageName : String,
-    val adapterClassName : String,
-    val modelClassName : String,
-    val layoutId : String,
-    val generateUpdateData : Boolean,
-    val bindingDataList : List<BindingData>
-)
+abstract class AdapterData {
+    abstract val appPackageId : String
+    abstract val adapterPackageName : String
+    abstract val adapterClassName : String
+    abstract val modelClassName : String
+    abstract val layoutId : String
+    abstract val bindingDataList : List<BindingData>
+}

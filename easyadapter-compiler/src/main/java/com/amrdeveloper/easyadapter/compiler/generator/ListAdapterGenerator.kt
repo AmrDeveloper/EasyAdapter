@@ -1,10 +1,10 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.RecyclerAdapterData
+import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : AdapterGenerator {
+class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGenerator {
 
     private val adapterName = adapterData.adapterClassName
     private val appPackageName = adapterData.appPackageId
@@ -12,33 +12,17 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
     private val viewHolderClassName = ClassName(adapterData.adapterPackageName, viewHolderName)
     private val viewHolderQualifiedClassName = ClassName(adapterData.adapterPackageName, "$adapterName.$viewHolderName")
     private val modelClassName = ClassName(adapterData.adapterPackageName, adapterData.modelClassName)
-    private val itemsListClassName = GeneratorConstants.listClassName.parameterizedBy(modelClassName)
     private val rClassName = ClassName(appPackageName, "R")
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
-        .primaryConstructor(FunSpec.constructorBuilder()
-            .addParameter("items", itemsListClassName)
-            .build()
-        )
-        .superclass(GeneratorConstants.recyclerAdapterClassName.parameterizedBy(viewHolderQualifiedClassName))
-        .addProperty(PropertySpec.builder("items", itemsListClassName)
-            .addModifiers(KModifier.PRIVATE)
-            .initializer("items")
-            .mutable(true)
-            .build()
-        )
+        .superclass(GeneratorConstants.recyclerListAdapterClassname.parameterizedBy(modelClassName, viewHolderQualifiedClassName))
+        .addSuperclassConstructorParameter("ModelComparator()")
         .addBaseMethods()
         .addViewHolderType()
+        .generateDiffUtil(modelClassName, adapterData.diffUtilContent)
         .build()
 
     private fun TypeSpec.Builder.addBaseMethods(): TypeSpec.Builder = apply {
-        addFunction(FunSpec.builder("getItemCount")
-            .addModifiers(KModifier.OVERRIDE)
-            .returns(INT)
-            .addStatement("return items.size")
-            .build()
-        )
-
         addFunction(FunSpec.builder("onCreateViewHolder")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("parent", GeneratorConstants.viewGroupClassName)
@@ -53,23 +37,16 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("viewHolder", viewHolderQualifiedClassName)
             .addParameter("position", INT)
-            .addStatement("viewHolder.bind(items[position])")
+            .addStatement("val currentItem = getItem(position) ?: return")
+            .addStatement("viewHolder.bind(currentItem)")
             .build()
         )
-
-        if (adapterData.generateUpdateData) {
-            addFunction(FunSpec.builder("updateData")
-                .addParameter("newList", itemsListClassName)
-                .addStatement("items = newList")
-                .addStatement("notifyDataSetChanged()")
-                .build()
-            )
-        }
     }
 
-    private fun TypeSpec.Builder.addViewHolderType(): TypeSpec.Builder = addType(
+    private fun TypeSpec.Builder.addViewHolderType(): TypeSpec.Builder = addType (
         TypeSpec.classBuilder(viewHolderClassName)
-            .primaryConstructor(FunSpec.constructorBuilder()
+            .primaryConstructor(
+                FunSpec.constructorBuilder()
                 .addParameter("itemView", GeneratorConstants.viewClassName)
                 .build()
             )
