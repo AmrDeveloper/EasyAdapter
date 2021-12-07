@@ -83,7 +83,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val generateUpdateData = annotation.generateUpdateData
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}RecyclerAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
         return RecyclerAdapterData (
@@ -104,7 +104,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val diffUtilContent = annotation.diffUtilContent
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ListAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
         return ListAdapterData (
@@ -125,7 +125,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val diffUtilContent = annotation.diffUtilContent
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}PagingDataAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
         return PagingAdapterData (
@@ -146,7 +146,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val diffUtilContent = annotation.diffUtilContent
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}PagedListAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
         return PagedListAdapterData (
