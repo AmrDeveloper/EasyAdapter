@@ -9,6 +9,10 @@ object GeneratorConstants {
 
     val recyclerListAdapterClassname = ClassName("androidx.recyclerview.widget", "ListAdapter")
     val recyclerAdapterClassName = ClassName("androidx.recyclerview.widget.RecyclerView", "Adapter")
+
+    val pagingDataAdapterClassName = ClassName("androidx.paging", "PagingDataAdapter")
+    val pagedListAdapterClassName = ClassName("androidx.paging", "PagedListAdapter")
+
     val recyclerViewHolderClassName = ClassName("androidx.recyclerview.widget.RecyclerView", "ViewHolder")
     val diffUtilCallbackClassName = ClassName("androidx.recyclerview.widget.DiffUtil", "ItemCallback")
 

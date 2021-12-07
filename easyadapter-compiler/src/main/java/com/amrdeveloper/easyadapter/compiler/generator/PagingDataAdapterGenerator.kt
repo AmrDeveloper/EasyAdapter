@@ -1,10 +1,10 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
+import com.amrdeveloper.easyadapter.compiler.model.PagingAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGenerator {
+class PagingDataAdapterGenerator(private val adapterData: PagingAdapterData) : AdapterGenerator {
 
     private val adapterName = adapterData.adapterClassName
     private val appPackageName = adapterData.appPackageId
@@ -15,7 +15,7 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
     private val rClassName = ClassName(appPackageName, "R")
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
-        .superclass(GeneratorConstants.recyclerListAdapterClassname.parameterizedBy(modelClassName, viewHolderQualifiedClassName))
+        .superclass(GeneratorConstants.pagingDataAdapterClassName.parameterizedBy(modelClassName, viewHolderQualifiedClassName))
         .addSuperclassConstructorParameter("ModelComparator()")
         .addBaseMethods()
         .addViewHolderType()
@@ -23,7 +23,8 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
         .build()
 
     private fun TypeSpec.Builder.addBaseMethods(): TypeSpec.Builder = apply {
-        addFunction(FunSpec.builder("onCreateViewHolder")
+        addFunction(
+            FunSpec.builder("onCreateViewHolder")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("parent", GeneratorConstants.viewGroupClassName)
             .addParameter("viewType", INT)
@@ -33,7 +34,8 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
             .build()
         )
 
-        addFunction(FunSpec.builder("onBindViewHolder")
+        addFunction(
+            FunSpec.builder("onBindViewHolder")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("viewHolder", viewHolderQualifiedClassName)
             .addParameter("position", INT)
@@ -47,8 +49,8 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
         TypeSpec.classBuilder(viewHolderClassName)
             .primaryConstructor(
                 FunSpec.constructorBuilder()
-                .addParameter("itemView", GeneratorConstants.viewClassName)
-                .build()
+                    .addParameter("itemView", GeneratorConstants.viewClassName)
+                    .build()
             )
             .superclass(GeneratorConstants.recyclerViewHolderClassName)
             .addSuperclassConstructorParameter("itemView")

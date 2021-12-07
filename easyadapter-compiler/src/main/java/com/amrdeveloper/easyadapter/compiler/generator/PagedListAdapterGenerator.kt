@@ -1,10 +1,10 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
+import com.amrdeveloper.easyadapter.compiler.model.PagedListAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGenerator {
+class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) : AdapterGenerator {
 
     private val adapterName = adapterData.adapterClassName
     private val appPackageName = adapterData.appPackageId
@@ -15,7 +15,7 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
     private val rClassName = ClassName(appPackageName, "R")
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
-        .superclass(GeneratorConstants.recyclerListAdapterClassname.parameterizedBy(modelClassName, viewHolderQualifiedClassName))
+        .superclass(GeneratorConstants.pagedListAdapterClassName.parameterizedBy(modelClassName, viewHolderQualifiedClassName))
         .addSuperclassConstructorParameter("ModelComparator()")
         .addBaseMethods()
         .addViewHolderType()
@@ -23,23 +23,25 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
         .build()
 
     private fun TypeSpec.Builder.addBaseMethods(): TypeSpec.Builder = apply {
-        addFunction(FunSpec.builder("onCreateViewHolder")
-            .addModifiers(KModifier.OVERRIDE)
-            .addParameter("parent", GeneratorConstants.viewGroupClassName)
-            .addParameter("viewType", INT)
-            .returns(viewHolderQualifiedClassName)
-            .addStatement("val view = android.view.LayoutInflater.from(parent.context).inflate(%T.layout.%L, parent, false)", rClassName, adapterData.layoutId)
-            .addStatement("return $viewHolderName(view)")
-            .build()
+        addFunction(
+            FunSpec.builder("onCreateViewHolder")
+                .addModifiers(KModifier.OVERRIDE)
+                .addParameter("parent", GeneratorConstants.viewGroupClassName)
+                .addParameter("viewType", INT)
+                .returns(viewHolderQualifiedClassName)
+                .addStatement("val view = android.view.LayoutInflater.from(parent.context).inflate(%T.layout.%L, parent, false)", rClassName, adapterData.layoutId)
+                .addStatement("return $viewHolderName(view)")
+                .build()
         )
 
-        addFunction(FunSpec.builder("onBindViewHolder")
-            .addModifiers(KModifier.OVERRIDE)
-            .addParameter("viewHolder", viewHolderQualifiedClassName)
-            .addParameter("position", INT)
-            .addStatement("val currentItem = getItem(position) ?: return")
-            .addStatement("viewHolder.bind(currentItem)")
-            .build()
+        addFunction(
+            FunSpec.builder("onBindViewHolder")
+                .addModifiers(KModifier.OVERRIDE)
+                .addParameter("viewHolder", viewHolderQualifiedClassName)
+                .addParameter("position", INT)
+                .addStatement("val currentItem = getItem(position) ?: return")
+                .addStatement("viewHolder.bind(currentItem)")
+                .build()
         )
     }
 
@@ -47,8 +49,8 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
         TypeSpec.classBuilder(viewHolderClassName)
             .primaryConstructor(
                 FunSpec.constructorBuilder()
-                .addParameter("itemView", GeneratorConstants.viewClassName)
-                .build()
+                    .addParameter("itemView", GeneratorConstants.viewClassName)
+                    .build()
             )
             .superclass(GeneratorConstants.recyclerViewHolderClassName)
             .addSuperclassConstructorParameter("itemView")

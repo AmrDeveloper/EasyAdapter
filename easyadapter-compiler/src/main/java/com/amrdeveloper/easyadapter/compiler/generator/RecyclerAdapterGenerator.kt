@@ -82,7 +82,7 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
     private fun TypeSpec.Builder.addBindingMethod(): TypeSpec.Builder = addFunction(
         FunSpec.builder("bind")
             .addParameter("item", modelClassName)
-            .generateBindingData(rClassName, adapterData.bindingDataList)
+            .addBindingDataList(rClassName, adapterData.bindingDataList)
             .build()
     )
 }

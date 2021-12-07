@@ -1,12 +1,16 @@
 package com.amrdeveloper.easyadapter.compiler
 
 import com.amrdeveloper.easyadapter.adapter.ListAdapter
+import com.amrdeveloper.easyadapter.adapter.PagedListAdapter
+import com.amrdeveloper.easyadapter.adapter.PagingDataAdapter
 import com.amrdeveloper.easyadapter.adapter.RecyclerAdapter
 import com.amrdeveloper.easyadapter.bind.BindBackgroundColor
 import com.amrdeveloper.easyadapter.bind.BindImageRes
 import com.amrdeveloper.easyadapter.bind.BindBackgroundRes
 import com.amrdeveloper.easyadapter.bind.BindText
 import com.amrdeveloper.easyadapter.compiler.generator.ListAdapterGenerator
+import com.amrdeveloper.easyadapter.compiler.generator.PagedListAdapterGenerator
+import com.amrdeveloper.easyadapter.compiler.generator.PagingDataAdapterGenerator
 import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
 import com.amrdeveloper.easyadapter.compiler.generator.RecyclerAdapterGenerator
 import com.amrdeveloper.easyadapter.compiler.model.*
@@ -52,6 +56,23 @@ class EasyAdapterProcessor : AbstractProcessor() {
                 .writeTo(File(kaptGeneratedDir))
         }
 
+        val pagingAdapterElements = environment.getElementsAnnotatedWith(PagingDataAdapter::class.java)
+        for (adapterElement in pagingAdapterElements) {
+            val pagingAdapter = parsePagingDataAdapter(adapterElement)
+            FileSpec.builder(pagingAdapter.adapterPackageName, pagingAdapter.adapterClassName)
+                .addType(PagingDataAdapterGenerator(pagingAdapter).generate())
+                .build()
+                .writeTo(File(kaptGeneratedDir))
+        }
+
+        val pagedListAdapterElements = environment.getElementsAnnotatedWith(PagedListAdapter::class.java)
+        for (adapterElement in pagedListAdapterElements) {
+            val pagedAdapter = parsePagedListAdapter(adapterElement)
+            FileSpec.builder(pagedAdapter.adapterPackageName, pagedAdapter.adapterClassName)
+                .addType(PagedListAdapterGenerator(pagedAdapter).generate())
+                .build()
+                .writeTo(File(kaptGeneratedDir))
+        }
         return true
     }
 
@@ -87,6 +108,48 @@ class EasyAdapterProcessor : AbstractProcessor() {
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
 
         return ListAdapterData (
+            appPackageName,
+            adapterPackageName,
+            adapterClassName,
+            className,
+            layoutId,
+            viewBindingDataList,
+            diffUtilContent,
+        )
+    }
+
+    private fun parsePagingDataAdapter(element: Element) : PagingAdapterData {
+        val className = element.simpleName.toString()
+        val adapterPackageName = processingEnv.elementUtils.getPackageOf(element).toString()
+        val annotation = element.getAnnotation(PagingDataAdapter::class.java)
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val diffUtilContent = annotation.diffUtilContent
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+
+        return PagingAdapterData (
+            appPackageName,
+            adapterPackageName,
+            adapterClassName,
+            className,
+            layoutId,
+            viewBindingDataList,
+            diffUtilContent,
+        )
+    }
+
+    private fun parsePagedListAdapter(element: Element) : PagedListAdapterData {
+        val className = element.simpleName.toString()
+        val adapterPackageName = processingEnv.elementUtils.getPackageOf(element).toString()
+        val annotation = element.getAnnotation(PagedListAdapter::class.java)
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val diffUtilContent = annotation.diffUtilContent
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}Adapter" else annotation.customClassName
+        val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+
+        return PagedListAdapterData (
             appPackageName,
             adapterPackageName,
             adapterClassName,
@@ -133,7 +196,9 @@ class EasyAdapterProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes() = mutableSetOf<String> (
         RecyclerAdapter::class.java.canonicalName,
-        ListAdapter::class.java.canonicalName
+        ListAdapter::class.java.canonicalName,
+        PagingDataAdapter::class.java.canonicalName,
+        PagedListAdapter::class.java.canonicalName
     )
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()

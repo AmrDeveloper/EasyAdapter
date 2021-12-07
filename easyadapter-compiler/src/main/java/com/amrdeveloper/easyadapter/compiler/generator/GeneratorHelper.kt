@@ -8,7 +8,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeSpec
 
-fun FunSpec.Builder.generateBindingData(
+fun FunSpec.Builder.addBindingDataList(
     rClassName: ClassName,
     bindingDataList: List<BindingData>
 ): FunSpec.Builder = apply {
@@ -26,7 +26,7 @@ fun FunSpec.Builder.generateBindingData(
     }
 }
 
-fun TypeSpec.Builder.generateDiffUtil(
+fun TypeSpec.Builder.addDiffUtilsItemCallback(
     modelClassName: ClassName,
     diffUtilContent: String
 ): TypeSpec.Builder = addType(
