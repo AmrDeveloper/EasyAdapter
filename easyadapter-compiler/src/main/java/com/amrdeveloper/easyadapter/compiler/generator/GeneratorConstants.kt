@@ -17,4 +17,7 @@ object GeneratorConstants {
     val diffUtilCallbackClassName = ClassName("androidx.recyclerview.widget.DiffUtil", "ItemCallback")
 
     val listClassName = ClassName("kotlin.collections", "List")
+    val picassoClassName = ClassName("com.squareup.picasso", "Picasso")
+    val coilImageRequestClassName = ClassName("coil.request", "ImageRequest")
+    val glideClassName = ClassName("com.bumptech.glide", "Glide")
 }

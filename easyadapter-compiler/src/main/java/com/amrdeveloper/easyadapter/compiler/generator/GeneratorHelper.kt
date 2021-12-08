@@ -1,5 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
+import com.amrdeveloper.easyadapter.compiler.model.BindType
 import com.amrdeveloper.easyadapter.compiler.model.BindingData
 import com.amrdeveloper.easyadapter.option.ViewSetterType
 import com.squareup.kotlinpoet.ClassName
@@ -13,16 +14,31 @@ fun FunSpec.Builder.addBindingDataList(
     bindingDataList: List<BindingData>
 ): FunSpec.Builder = apply {
     bindingDataList.forEach {
-        addStatement(
-            it.poetFormat,
-            it.viewClassType,
-            rClassName,
-            it.viewId,
+        val bindingValueSetter =
             if (it.viewSetterType == ViewSetterType.PROPERTY)
                 "${it.viewClassSetter}=item.${it.value}"
             else
                 "${it.viewClassSetter}(item.${it.value})"
-        )
+        when (it.bindType) {
+            BindType.IMAGE -> {
+                addStatement(
+                    it.poetFormat,
+                    bindingValueSetter,
+                    it.viewClassType,
+                    rClassName,
+                    it.viewId
+                )
+            }
+            else -> {
+                addStatement(
+                    it.poetFormat,
+                    it.viewClassType,
+                    rClassName,
+                    it.viewId,
+                    bindingValueSetter
+                )
+            }
+        }
     }
 }
 

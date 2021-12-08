@@ -189,6 +189,12 @@ class EasyAdapterProcessor : AbstractProcessor() {
                 val binding = BindVisibilityData(visibilityBinding.value, visibilityBinding.viewId)
                 viewBindingDataList.add(binding)
             }
+
+            val imageBinding = element.getAnnotation(BindImage::class.java)
+            if (imageBinding != null) {
+                val binding = BindImageData(imageBinding.value, imageBinding.viewId, imageBinding.loader)
+                viewBindingDataList.add(binding)
+            }
         }
         return viewBindingDataList
     }
