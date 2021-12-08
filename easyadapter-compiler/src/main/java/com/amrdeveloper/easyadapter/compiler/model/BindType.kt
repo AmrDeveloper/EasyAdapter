@@ -1,6 +1,7 @@
 package com.amrdeveloper.easyadapter.compiler.model
 
 enum class BindType {
+    VIEW,
     TEXT,
     IMAGE,
     IMAGE_RES,

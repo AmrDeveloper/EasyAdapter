@@ -4,10 +4,7 @@ import com.amrdeveloper.easyadapter.adapter.ListAdapter
 import com.amrdeveloper.easyadapter.adapter.PagedListAdapter
 import com.amrdeveloper.easyadapter.adapter.PagingDataAdapter
 import com.amrdeveloper.easyadapter.adapter.RecyclerAdapter
-import com.amrdeveloper.easyadapter.bind.BindBackgroundColor
-import com.amrdeveloper.easyadapter.bind.BindImageRes
-import com.amrdeveloper.easyadapter.bind.BindBackgroundRes
-import com.amrdeveloper.easyadapter.bind.BindText
+import com.amrdeveloper.easyadapter.bind.*
 import com.amrdeveloper.easyadapter.compiler.generator.ListAdapterGenerator
 import com.amrdeveloper.easyadapter.compiler.generator.PagedListAdapterGenerator
 import com.amrdeveloper.easyadapter.compiler.generator.PagingDataAdapterGenerator
@@ -167,28 +164,30 @@ class EasyAdapterProcessor : AbstractProcessor() {
             if (textViewBinding != null) {
                 val binding = BindingTextData(textViewBinding.value, textViewBinding.viewId)
                 viewBindingDataList.add(binding)
-                continue
             }
 
             val imageResBinding = element.getAnnotation(BindImageRes::class.java)
             if (imageResBinding != null) {
                 val binding = BindImageResData(imageResBinding.value, imageResBinding.viewId)
                 viewBindingDataList.add(binding)
-                continue
             }
 
             val backgroundResBinding = element.getAnnotation(BindBackgroundRes::class.java)
             if (backgroundResBinding != null) {
                 val binding = BindBackgroundResData(backgroundResBinding.value, backgroundResBinding.viewId)
                 viewBindingDataList.add(binding)
-                continue
             }
 
             val backgroundColorBinding = element.getAnnotation(BindBackgroundColor::class.java)
             if (backgroundColorBinding != null) {
                 val binding = BindBackgroundColorData(backgroundColorBinding.value, backgroundColorBinding.viewId)
                 viewBindingDataList.add(binding)
-                continue
+            }
+
+            val visibilityBinding = element.getAnnotation(BindVisibility::class.java)
+            if (visibilityBinding != null) {
+                val binding = BindVisibilityData(visibilityBinding.value, visibilityBinding.viewId)
+                viewBindingDataList.add(binding)
             }
         }
         return viewBindingDataList
