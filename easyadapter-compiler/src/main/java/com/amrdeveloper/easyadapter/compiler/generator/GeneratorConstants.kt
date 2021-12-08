@@ -4,8 +4,12 @@ import com.squareup.kotlinpoet.ClassName
 
 object GeneratorConstants {
 
+    val contextClassName = ClassName("android.content", "Context")
     val viewGroupClassName = ClassName("android.view", "ViewGroup")
     val viewClassName = ClassName("android.view", "View")
+    val layoutInflaterClassName = ClassName("android.view", "LayoutInflater")
+
+    val arrayAdapterClassName = ClassName("android.widget", "ArrayAdapter")
 
     val recyclerListAdapterClassname = ClassName("androidx.recyclerview.widget", "ListAdapter")
     val recyclerAdapterClassName = ClassName("androidx.recyclerview.widget.RecyclerView", "Adapter")

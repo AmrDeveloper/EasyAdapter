@@ -28,7 +28,12 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
             .addParameter("parent", GeneratorConstants.viewGroupClassName)
             .addParameter("viewType", INT)
             .returns(viewHolderQualifiedClassName)
-            .addStatement("val view = android.view.LayoutInflater.from(parent.context).inflate(%T.layout.%L, parent, false)", rClassName, adapterData.layoutId)
+            .addStatement(
+                "val view = %T.from(parent.context).inflate(%T.layout.%L, parent, false)",
+                GeneratorConstants.layoutInflaterClassName,
+                rClassName,
+                adapterData.layoutId
+            )
             .addStatement("return $viewHolderName(view)")
             .build()
         )

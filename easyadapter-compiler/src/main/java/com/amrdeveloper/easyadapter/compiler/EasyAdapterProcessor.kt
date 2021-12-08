@@ -1,15 +1,9 @@
 package com.amrdeveloper.easyadapter.compiler
 
-import com.amrdeveloper.easyadapter.adapter.ListAdapter
-import com.amrdeveloper.easyadapter.adapter.PagedListAdapter
-import com.amrdeveloper.easyadapter.adapter.PagingDataAdapter
-import com.amrdeveloper.easyadapter.adapter.RecyclerAdapter
+import com.amrdeveloper.easyadapter.adapter.*
 import com.amrdeveloper.easyadapter.bind.*
-import com.amrdeveloper.easyadapter.compiler.generator.ListAdapterGenerator
-import com.amrdeveloper.easyadapter.compiler.generator.PagedListAdapterGenerator
-import com.amrdeveloper.easyadapter.compiler.generator.PagingDataAdapterGenerator
+import com.amrdeveloper.easyadapter.compiler.generator.*
 import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
-import com.amrdeveloper.easyadapter.compiler.generator.RecyclerAdapterGenerator
 import com.amrdeveloper.easyadapter.compiler.model.*
 import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
 import com.squareup.kotlinpoet.FileSpec
@@ -70,6 +64,16 @@ class EasyAdapterProcessor : AbstractProcessor() {
                 .build()
                 .writeTo(File(kaptGeneratedDir))
         }
+
+        val arrayAdapterElements = environment.getElementsAnnotatedWith(ArrayAdapter::class.java)
+        for (adapterElement in arrayAdapterElements) {
+            val arrayAdapter = parseArrayAdapter(adapterElement)
+            FileSpec.builder(arrayAdapter.adapterPackageName, arrayAdapter.adapterClassName)
+                .addType(ArrayAdapterGenerator(arrayAdapter).generate())
+                .build()
+                .writeTo(File(kaptGeneratedDir))
+        }
+
         return true
     }
 
@@ -197,6 +201,25 @@ class EasyAdapterProcessor : AbstractProcessor() {
             }
         }
         return viewBindingDataList
+    }
+
+    private fun parseArrayAdapter(element: Element) : ArrayAdapterData {
+        val className = element.simpleName.toString()
+        val adapterPackageName = processingEnv.elementUtils.getPackageOf(element).toString()
+        val annotation = element.getAnnotation(ArrayAdapter::class.java)
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ArrayAdapter" else annotation.customClassName
+        val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+
+        return ArrayAdapterData (
+            appPackageName,
+            adapterPackageName,
+            adapterClassName,
+            className,
+            layoutId,
+            viewBindingDataList,
+        )
     }
 
     override fun getSupportedAnnotationTypes() = mutableSetOf<String> (
