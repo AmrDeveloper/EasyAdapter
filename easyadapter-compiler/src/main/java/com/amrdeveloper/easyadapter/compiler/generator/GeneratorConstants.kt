@@ -9,6 +9,8 @@ object GeneratorConstants {
     val viewClassName = ClassName("android.view", "View")
     val layoutInflaterClassName = ClassName("android.view", "LayoutInflater")
 
+    val motionEventClassName = ClassName("android.view", "MotionEvent")
+
     val arrayAdapterClassName = ClassName("android.widget", "ArrayAdapter")
 
     val recyclerListAdapterClassname = ClassName("androidx.recyclerview.widget", "ListAdapter")

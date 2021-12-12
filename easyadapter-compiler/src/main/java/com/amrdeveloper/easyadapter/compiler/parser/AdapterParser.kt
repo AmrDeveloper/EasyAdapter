@@ -2,7 +2,13 @@ package com.amrdeveloper.easyadapter.compiler.parser
 
 import com.amrdeveloper.easyadapter.adapter.*
 import com.amrdeveloper.easyadapter.bind.*
-import com.amrdeveloper.easyadapter.compiler.model.*
+import com.amrdeveloper.easyadapter.compiler.data.adapter.*
+import com.amrdeveloper.easyadapter.compiler.data.bind.*
+import com.amrdeveloper.easyadapter.compiler.data.listener.ClickListenerData
+import com.amrdeveloper.easyadapter.compiler.data.listener.ListenerData
+import com.amrdeveloper.easyadapter.compiler.data.listener.LongClickListenerData
+import com.amrdeveloper.easyadapter.compiler.data.listener.TouchListenerData
+import com.amrdeveloper.easyadapter.option.ListenerType
 import javax.lang.model.element.Element
 import javax.lang.model.util.Elements
 
@@ -17,6 +23,7 @@ class AdapterParser(private val elementUtils: Elements) {
         val generateUpdateData = annotation.generateUpdateData
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}RecyclerAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+        val adapterListeners = parseAdapterListeners(element)
 
         return RecyclerAdapterData (
             appPackageName,
@@ -25,6 +32,7 @@ class AdapterParser(private val elementUtils: Elements) {
             className,
             layoutId,
             viewBindingDataList,
+            adapterListeners,
             generateUpdateData,
         )
     }
@@ -38,6 +46,7 @@ class AdapterParser(private val elementUtils: Elements) {
         val diffUtilContent = annotation.diffUtilContent
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ListAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+        val adapterListeners = parseAdapterListeners(element)
 
         return ListAdapterData (
             appPackageName,
@@ -46,6 +55,7 @@ class AdapterParser(private val elementUtils: Elements) {
             className,
             layoutId,
             viewBindingDataList,
+            adapterListeners,
             diffUtilContent,
         )
     }
@@ -59,6 +69,7 @@ class AdapterParser(private val elementUtils: Elements) {
         val diffUtilContent = annotation.diffUtilContent
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}PagingDataAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+        val adapterListeners = parseAdapterListeners(element)
 
         return PagingAdapterData (
             appPackageName,
@@ -67,6 +78,7 @@ class AdapterParser(private val elementUtils: Elements) {
             className,
             layoutId,
             viewBindingDataList,
+            adapterListeners,
             diffUtilContent,
         )
     }
@@ -80,6 +92,7 @@ class AdapterParser(private val elementUtils: Elements) {
         val diffUtilContent = annotation.diffUtilContent
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}PagedListAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+        val adapterListeners = parseAdapterListeners(element)
 
         return PagedListAdapterData (
             appPackageName,
@@ -88,6 +101,7 @@ class AdapterParser(private val elementUtils: Elements) {
             className,
             layoutId,
             viewBindingDataList,
+            adapterListeners,
             diffUtilContent,
         )
     }
@@ -100,6 +114,7 @@ class AdapterParser(private val elementUtils: Elements) {
         val layoutId = annotation.layoutId
         val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ArrayAdapter" else annotation.customClassName
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+        val adapterListeners = parseAdapterListeners(element)
 
         return ArrayAdapterData (
             appPackageName,
@@ -108,6 +123,7 @@ class AdapterParser(private val elementUtils: Elements) {
             className,
             layoutId,
             viewBindingDataList,
+            adapterListeners,
         )
     }
 
@@ -147,4 +163,24 @@ class AdapterParser(private val elementUtils: Elements) {
         return viewBindingDataList
     }
 
+    private fun parseAdapterListeners(element: Element) : Set<ListenerData> {
+        val listeners = mutableSetOf<ListenerData>()
+        element.getAnnotationsByType(BindListener::class.java).forEach {
+            when (it.listenerType) {
+                ListenerType.OnClick -> {
+                    val listener = ClickListenerData(it.viewId)
+                    listeners.add(listener)
+                }
+                ListenerType.OnLongClick -> {
+                    val listener = LongClickListenerData(it.viewId)
+                    listeners.add(listener)
+                }
+                ListenerType.OnTouch -> {
+                    val listener = TouchListenerData(it.viewId)
+                    listeners.add(listener)
+                }
+            }
+        }
+        return listeners
+    }
 }

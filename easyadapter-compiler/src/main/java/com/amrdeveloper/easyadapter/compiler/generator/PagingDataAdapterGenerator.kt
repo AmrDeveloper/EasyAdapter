@@ -1,6 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.PagingAdapterData
+import com.amrdeveloper.easyadapter.compiler.data.adapter.PagingAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
@@ -19,6 +19,7 @@ class PagingDataAdapterGenerator(private val adapterData: PagingAdapterData) : A
         .addSuperclassConstructorParameter("ModelComparator()")
         .addBaseMethods()
         .addViewHolderType()
+        .addGlobalListenersRequirements(modelClassName, adapterData.listeners)
         .addDiffUtilsItemCallback(modelClassName, adapterData.diffUtilContent)
         .build()
 
@@ -41,12 +42,14 @@ class PagingDataAdapterGenerator(private val adapterData: PagingAdapterData) : A
 
         addFunction(
             FunSpec.builder("onBindViewHolder")
-            .addModifiers(KModifier.OVERRIDE)
-            .addParameter("viewHolder", viewHolderQualifiedClassName)
-            .addParameter("position", INT)
-            .addStatement("val currentItem = getItem(position) ?: return")
-            .addStatement("viewHolder.bind(currentItem)")
-            .build()
+                .addModifiers(KModifier.OVERRIDE)
+                .addParameter("viewHolder", viewHolderQualifiedClassName)
+                .addParameter("position", INT)
+                .addStatement("val item = getItem(position) ?: return")
+                .addStatement("viewHolder.bind(item)")
+                .addStatement("val itemView = viewHolder.itemView")
+                .addListenerBindingList(rClassName, adapterData.listeners)
+                .build()
         )
     }
 

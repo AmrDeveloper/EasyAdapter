@@ -1,6 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.RecyclerAdapterData
+import com.amrdeveloper.easyadapter.compiler.data.adapter.RecyclerAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
@@ -27,6 +27,7 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
             .mutable(true)
             .build()
         )
+        .addGlobalListenersRequirements(modelClassName, adapterData.listeners)
         .addBaseMethods()
         .addViewHolderType()
         .build()
@@ -58,7 +59,10 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("viewHolder", viewHolderQualifiedClassName)
             .addParameter("position", INT)
-            .addStatement("viewHolder.bind(items[position])")
+            .addStatement("val item = items[position]")
+            .addStatement("viewHolder.bind(item)")
+            .addStatement("val itemView = viewHolder.itemView")
+            .addListenerBindingList(rClassName, adapterData.listeners)
             .build()
         )
 

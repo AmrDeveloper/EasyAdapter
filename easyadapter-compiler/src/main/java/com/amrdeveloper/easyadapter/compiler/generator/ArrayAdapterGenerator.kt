@@ -1,6 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.ArrayAdapterData
+import com.amrdeveloper.easyadapter.compiler.data.adapter.ArrayAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
@@ -20,6 +20,7 @@ class ArrayAdapterGenerator(private val adapterData : ArrayAdapterData) : Adapte
         )
         .superclass(GeneratorConstants.arrayAdapterClassName.parameterizedBy(modelClassName))
         .addSuperclassConstructorParameter("context, 0, items")
+        .addGlobalListenersRequirements(modelClassName, adapterData.listeners)
         .addViewHolderType()
         .build()
 
@@ -37,6 +38,7 @@ class ArrayAdapterGenerator(private val adapterData : ArrayAdapterData) : Adapte
             )
             .addStatement("val item = getItem(position) ?: return itemView")
             .addBindingDataList(rClassName, adapterData.bindingDataList)
+            .addListenerBindingList(rClassName, adapterData.listeners)
             .returns(GeneratorConstants.viewClassName)
             .addStatement("return itemView")
             .build()

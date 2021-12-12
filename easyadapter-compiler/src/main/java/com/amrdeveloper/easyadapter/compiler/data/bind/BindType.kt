@@ -1,4 +1,4 @@
-package com.amrdeveloper.easyadapter.compiler.model
+package com.amrdeveloper.easyadapter.compiler.data.bind
 
 enum class BindType {
     VIEW,

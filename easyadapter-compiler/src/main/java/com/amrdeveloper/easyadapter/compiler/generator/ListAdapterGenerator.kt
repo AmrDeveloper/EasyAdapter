@@ -1,6 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.ListAdapterData
+import com.amrdeveloper.easyadapter.compiler.data.adapter.ListAdapterData
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
@@ -19,6 +19,7 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
         .addSuperclassConstructorParameter("ModelComparator()")
         .addBaseMethods()
         .addViewHolderType()
+        .addGlobalListenersRequirements(modelClassName, adapterData.listeners)
         .addDiffUtilsItemCallback(modelClassName, adapterData.diffUtilContent)
         .build()
 
@@ -42,8 +43,10 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("viewHolder", viewHolderQualifiedClassName)
             .addParameter("position", INT)
-            .addStatement("val currentItem = getItem(position) ?: return")
-            .addStatement("viewHolder.bind(currentItem)")
+            .addStatement("val item = getItem(position) ?: return")
+            .addStatement("viewHolder.bind(item)")
+            .addStatement("val itemView = viewHolder.itemView")
+            .addListenerBindingList(rClassName, adapterData.listeners)
             .build()
         )
     }

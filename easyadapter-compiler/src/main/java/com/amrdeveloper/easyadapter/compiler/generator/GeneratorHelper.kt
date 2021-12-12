@@ -1,13 +1,11 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.model.BindType
-import com.amrdeveloper.easyadapter.compiler.model.BindingData
+import com.amrdeveloper.easyadapter.compiler.data.bind.BindType
+import com.amrdeveloper.easyadapter.compiler.data.bind.BindingData
+import com.amrdeveloper.easyadapter.compiler.data.listener.ListenerData
 import com.amrdeveloper.easyadapter.option.ViewSetterType
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.TypeSpec
 
 fun FunSpec.Builder.addBindingDataList(
     rClassName: ClassName,
@@ -68,3 +66,67 @@ fun TypeSpec.Builder.addDiffUtilsItemCallback(
         )
         .build()
 )
+
+fun TypeSpec.Builder.addGlobalListenersRequirements (
+    modelClassName: ClassName,
+    listeners : Set<ListenerData>
+): TypeSpec.Builder = apply {
+    listeners.forEach { it ->
+        val listenerClassName = ClassName("", it.listenerInterfaceName)
+
+        val parameters = mutableListOf<ParameterSpec>()
+        parameters.add(ParameterSpec("model", modelClassName))
+        it.listenerArgs.forEach {
+            parameters.add(ParameterSpec(it.key, it.value))
+        }
+        
+        addType(
+            TypeSpec.interfaceBuilder(it.listenerInterfaceName)
+                .addFunction(
+                    FunSpec.builder(it.listenerFunctionName)
+                        .addModifiers(KModifier.ABSTRACT)
+                        .addParameters(parameters)
+                        .build()
+                )
+                .build()
+        )
+
+        addProperty(
+            PropertySpec.builder(it.listenerVarName, listenerClassName)
+                .mutable(true)
+                .addModifiers(KModifier.LATEINIT)
+                .build()
+        )
+
+        addFunction(
+            FunSpec
+                .builder("set${it.listenerVarName}")
+                .addParameter("listener", listenerClassName)
+                .addStatement("${it.listenerVarName} = listener")
+                .build()
+        )
+    }
+}
+
+fun FunSpec.Builder.addListenerBindingList (
+    rClassName: ClassName,
+    listeners : Set<ListenerData>
+): FunSpec.Builder = apply {
+    listeners.forEach {
+        val listenerBinding = """
+            if (::${it.listenerVarName}.isInitialized) {
+                ${it.listenerVarName}.${it.listenerFunctionName}(${it.listenerBind})
+            }
+        """.trimIndent()
+        if (it.viewId == "itemView") {
+            addStatement("itemView${it.defaultListenerFormat}", listenerBinding)
+        } else {
+            addStatement(
+                "${if (it.viewId == "itemView") "itemView" else "itemView.findViewById<%T>(%T.id.${it.viewId})"}${it.defaultListenerFormat}",
+                GeneratorConstants.viewClassName,
+                rClassName,
+                listenerBinding
+            )
+        }
+    }
+}

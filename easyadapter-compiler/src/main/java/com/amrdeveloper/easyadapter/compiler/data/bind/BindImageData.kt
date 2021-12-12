@@ -1,4 +1,4 @@
-package com.amrdeveloper.easyadapter.compiler.model
+package com.amrdeveloper.easyadapter.compiler.data.bind
 
 import com.amrdeveloper.easyadapter.compiler.generator.GeneratorConstants
 import com.amrdeveloper.easyadapter.option.ImageLoader
