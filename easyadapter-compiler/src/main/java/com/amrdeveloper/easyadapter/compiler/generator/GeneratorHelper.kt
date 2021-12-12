@@ -95,6 +95,7 @@ fun TypeSpec.Builder.addGlobalListenersRequirements (
             PropertySpec.builder(it.listenerVarName, listenerClassName)
                 .mutable(true)
                 .addModifiers(KModifier.LATEINIT)
+                .addModifiers(KModifier.PRIVATE)
                 .build()
         )
 
