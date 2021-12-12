@@ -6,7 +6,7 @@ import com.squareup.kotlinpoet.ClassName
 
 data class TouchListenerData (
     override val viewId: String,
-    override val listenerType: ListenerType = ListenerType.OnLongClick,
+    override val listenerType: ListenerType = ListenerType.OnTouch,
     override val listenerInterfaceName: String = "On${viewId}TouchClickListener",
     override val listenerVarName: String = "on${viewId}TouchClickListener",
     override val listenerFunctionName: String = "on${viewId}TouchClick",
