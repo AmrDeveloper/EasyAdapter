@@ -165,19 +165,21 @@ class AdapterParser(private val elementUtils: Elements) {
 
     private fun parseAdapterListeners(element: Element) : Set<ListenerData> {
         val listeners = mutableSetOf<ListenerData>()
-        element.getAnnotationsByType(BindListener::class.java).forEach {
-            when (it.listenerType) {
-                ListenerType.OnClick -> {
-                    val listener = ClickListenerData(it.viewId)
-                    listeners.add(listener)
-                }
-                ListenerType.OnLongClick -> {
-                    val listener = LongClickListenerData(it.viewId)
-                    listeners.add(listener)
-                }
-                ListenerType.OnTouch -> {
-                    val listener = TouchListenerData(it.viewId)
-                    listeners.add(listener)
+        element.getAnnotationsByType(BindListeners::class.java).forEach { bindListeners ->
+            bindListeners.value.forEach {
+                when (it.listenerType) {
+                    ListenerType.OnClick -> {
+                        val listener = ClickListenerData(it.viewId)
+                        listeners.add(listener)
+                    }
+                    ListenerType.OnLongClick -> {
+                        val listener = LongClickListenerData(it.viewId)
+                        listeners.add(listener)
+                    }
+                    ListenerType.OnTouch -> {
+                        val listener = TouchListenerData(it.viewId)
+                        listeners.add(listener)
+                    }
                 }
             }
         }
