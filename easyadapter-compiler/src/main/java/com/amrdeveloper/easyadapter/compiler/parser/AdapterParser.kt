@@ -6,9 +6,9 @@ import com.amrdeveloper.easyadapter.compiler.model.*
 import javax.lang.model.element.Element
 import javax.lang.model.util.Elements
 
-object AdapterParser {
+class AdapterParser(private val elementUtils: Elements) {
 
-    fun parseRecyclerAdapter(elementUtils : Elements, element: Element) : RecyclerAdapterData {
+    fun parseRecyclerAdapter(element: Element) : RecyclerAdapterData {
         val className = element.simpleName.toString()
         val adapterPackageName = elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(RecyclerAdapter::class.java)
@@ -29,7 +29,7 @@ object AdapterParser {
         )
     }
 
-    fun parseListAdapter(elementUtils : Elements, element: Element) : ListAdapterData {
+    fun parseListAdapter(element: Element) : ListAdapterData {
         val className = element.simpleName.toString()
         val adapterPackageName = elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(ListAdapter::class.java)
@@ -50,7 +50,7 @@ object AdapterParser {
         )
     }
 
-    fun parsePagingDataAdapter(elementUtils : Elements, element: Element) : PagingAdapterData {
+    fun parsePagingDataAdapter(element: Element) : PagingAdapterData {
         val className = element.simpleName.toString()
         val adapterPackageName = elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(PagingDataAdapter::class.java)
@@ -71,7 +71,7 @@ object AdapterParser {
         )
     }
 
-    fun parsePagedListAdapter(elementUtils : Elements, element: Element) : PagedListAdapterData {
+    fun parsePagedListAdapter(element: Element) : PagedListAdapterData {
         val className = element.simpleName.toString()
         val adapterPackageName = elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(PagedListAdapter::class.java)
@@ -92,7 +92,7 @@ object AdapterParser {
         )
     }
 
-    fun parseArrayAdapter(elementUtils : Elements, element: Element) : ArrayAdapterData {
+    fun parseArrayAdapter(element: Element) : ArrayAdapterData {
         val className = element.simpleName.toString()
         val adapterPackageName = elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(ArrayAdapter::class.java)
