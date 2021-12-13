@@ -1,8 +1,7 @@
 package com.amrdeveloper.easyadapter.bind
 
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.SOURCE)
 annotation class BindText (
     val viewId : String,
-    val value : String,
 )
