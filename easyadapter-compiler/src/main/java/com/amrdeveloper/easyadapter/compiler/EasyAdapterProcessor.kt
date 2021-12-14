@@ -23,7 +23,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
         processingEnv?.let {
             elementUtils = it.elementUtils
             logger = EasyAdapterLogger(it)
-            adapterParser = AdapterParser(elementUtils)
+            adapterParser = AdapterParser(elementUtils, logger)
         }
     }
 

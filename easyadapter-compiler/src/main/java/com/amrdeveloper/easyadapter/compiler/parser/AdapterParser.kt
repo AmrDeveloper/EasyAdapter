@@ -8,11 +8,12 @@ import com.amrdeveloper.easyadapter.compiler.data.listener.ClickListenerData
 import com.amrdeveloper.easyadapter.compiler.data.listener.ListenerData
 import com.amrdeveloper.easyadapter.compiler.data.listener.LongClickListenerData
 import com.amrdeveloper.easyadapter.compiler.data.listener.TouchListenerData
+import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
 import com.amrdeveloper.easyadapter.option.ListenerType
 import javax.lang.model.element.Element
 import javax.lang.model.util.Elements
 
-class AdapterParser(private val elementUtils: Elements) {
+class AdapterParser(private val elementUtils: Elements, private val logger: EasyAdapterLogger) {
 
     fun parseRecyclerAdapter(element: Element) : RecyclerAdapterData {
         val className = element.simpleName.toString()
@@ -168,19 +169,14 @@ class AdapterParser(private val elementUtils: Elements) {
         val listeners = mutableSetOf<ListenerData>()
         element.getAnnotationsByType(BindListeners::class.java).forEach { bindListeners ->
             bindListeners.value.forEach {
-                when (it.listenerType) {
-                    ListenerType.OnClick -> {
-                        val listener = ClickListenerData(it.viewId)
-                        listeners.add(listener)
-                    }
-                    ListenerType.OnLongClick -> {
-                        val listener = LongClickListenerData(it.viewId)
-                        listeners.add(listener)
-                    }
-                    ListenerType.OnTouch -> {
-                        val listener = TouchListenerData(it.viewId)
-                        listeners.add(listener)
-                    }
+                val listener = when (it.listenerType) {
+                    ListenerType.OnClick -> ClickListenerData(it.viewId)
+                    ListenerType.OnLongClick -> LongClickListenerData(it.viewId)
+                    ListenerType.OnTouch -> TouchListenerData(it.viewId)
+                }
+                val isUnique = listeners.add(listener)
+                if (isUnique.not()) {
+                    logger.warn("You have declared ${it.listenerType} Listener more than one time in the same class", element)
                 }
             }
         }
