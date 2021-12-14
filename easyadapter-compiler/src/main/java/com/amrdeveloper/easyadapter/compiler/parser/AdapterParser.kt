@@ -132,32 +132,49 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val viewBindingDataList = mutableListOf<BindingData>()
         for (element in enclosedElements) {
             val elementName = element.simpleName.toString()
+            val elementType = element.asType().toString()
+
             element.getAnnotation(BindText::class.java)?.let {
                 val binding = BindingTextData(elementName, it.viewId)
                 viewBindingDataList.add(binding)
             }
 
             element.getAnnotation(BindImageRes::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindImageRes can used only with int data type", element)
+                }
                 val binding = BindImageResData(elementName, it.viewId)
                 viewBindingDataList.add(binding)
             }
 
             element.getAnnotation(BindBackgroundRes::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindBackgroundRes can used only with int data type", element)
+                }
                 val binding = BindBackgroundResData(elementName, it.viewId)
                 viewBindingDataList.add(binding)
             }
 
             element.getAnnotation(BindBackgroundColor::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindBackgroundColor can used only with int data type", element)
+                }
                 val binding = BindBackgroundColorData(elementName, it.viewId)
                 viewBindingDataList.add(binding)
             }
 
             element.getAnnotation(BindVisibility::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindVisibility can used only with int data type", element)
+                }
                 val binding = BindVisibilityData(elementName, it.viewId)
                 viewBindingDataList.add(binding)
             }
 
             element.getAnnotation(BindImage::class.java)?.let {
+                if (elementType != "java.lang.String") {
+                    logger.error("@BindImage can used only with String data type", element)
+                }
                 val binding = BindImageData(elementName, it.viewId, it.loader)
                 viewBindingDataList.add(binding)
             }
