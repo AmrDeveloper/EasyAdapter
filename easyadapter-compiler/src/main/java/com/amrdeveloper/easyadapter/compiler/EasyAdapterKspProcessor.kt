@@ -1,4 +1,5 @@
 package com.amrdeveloper.easyadapter.compiler
+
 import com.amrdeveloper.easyadapter.adapter.*
 import com.amrdeveloper.easyadapter.compiler.generator.*
 import com.amrdeveloper.easyadapter.compiler.parser.AdapterKspParser
@@ -17,13 +18,13 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
         val logger = env.logger
         val codeGenerator = env.codeGenerator
         val adapterParser = AdapterKspParser(logger)
+        val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
 
         resolver.getSymbolsWithAnnotation(RecyclerAdapter::class.java.name).forEach { classDeclaration ->
             if (classDeclaration is KSClassDeclaration) {
                 val adapter = adapterParser.parseRecyclerAdapter(classDeclaration)
                 val recyclerAdapter = RecyclerAdapterGenerator(adapter).generate()
                 val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
                 fileKotlinPoet.addType(recyclerAdapter).build().writeTo(codeGenerator, dependencies)
             }
         }
@@ -33,7 +34,6 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
                 val adapter = adapterParser.parseListAdapter(classDeclaration)
                 val listAdapter = ListAdapterGenerator(adapter).generate()
                 val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
                 fileKotlinPoet.addType(listAdapter).build().writeTo(codeGenerator, dependencies)
             }
         }
@@ -43,7 +43,6 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
                 val adapter = adapterParser.parsePagingDataAdapter(classDeclaration)
                 val pagingDataAdapter = PagingDataAdapterGenerator(adapter).generate()
                 val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
                 fileKotlinPoet.addType(pagingDataAdapter).build().writeTo(codeGenerator, dependencies)
             }
         }
@@ -53,7 +52,6 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
                 val adapter = adapterParser.parsePagedListAdapter(classDeclaration)
                 val pagedListAdapter = PagedListAdapterGenerator(adapter).generate()
                 val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
                 fileKotlinPoet.addType(pagedListAdapter).build().writeTo(codeGenerator, dependencies)
             }
         }
@@ -63,7 +61,6 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
                 val adapter = adapterParser.parseArrayAdapter(classDeclaration)
                 val adapterGenerator = ArrayAdapterGenerator(adapter).generate()
                 val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
                 fileKotlinPoet.addType(adapterGenerator).build().writeTo(codeGenerator, dependencies)
             }
         }
