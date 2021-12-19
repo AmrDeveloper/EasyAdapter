@@ -1,6 +1,7 @@
 package com.amrdeveloper.easyadapter.compiler
 
 import com.amrdeveloper.easyadapter.adapter.*
+import com.amrdeveloper.easyadapter.compiler.data.adapter.AdapterData
 import com.amrdeveloper.easyadapter.compiler.generator.*
 import com.amrdeveloper.easyadapter.compiler.parser.AdapterKspParser
 import com.google.devtools.ksp.KspExperimental
@@ -8,6 +9,7 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.writeTo
 
@@ -16,56 +18,56 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
     @OptIn(KspExperimental::class, KotlinPoetKspPreview::class)
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val logger = env.logger
-        val codeGenerator = env.codeGenerator
         val adapterParser = AdapterKspParser(logger)
         val dependencies =  Dependencies(false, *resolver.getAllFiles().toList().toTypedArray())
 
-        resolver.getSymbolsWithAnnotation(RecyclerAdapter::class.java.name).forEach { classDeclaration ->
-            if (classDeclaration is KSClassDeclaration) {
-                val adapter = adapterParser.parseRecyclerAdapter(classDeclaration)
+        resolver.getSymbolsWithAnnotation(RecyclerAdapter::class.java.name).forEach {
+            if (it is KSClassDeclaration) {
+                val adapter = adapterParser.parseRecyclerAdapter(it)
                 val recyclerAdapter = RecyclerAdapterGenerator(adapter).generate()
-                val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                fileKotlinPoet.addType(recyclerAdapter).build().writeTo(codeGenerator, dependencies)
+                generateAdapterSourceFile(adapter, recyclerAdapter, dependencies)
             }
         }
 
-        resolver.getSymbolsWithAnnotation(ListAdapter::class.java.name).forEach { classDeclaration ->
-            if (classDeclaration is KSClassDeclaration) {
-                val adapter = adapterParser.parseListAdapter(classDeclaration)
+        resolver.getSymbolsWithAnnotation(ListAdapter::class.java.name).forEach {
+            if (it is KSClassDeclaration) {
+                val adapter = adapterParser.parseListAdapter(it)
                 val listAdapter = ListAdapterGenerator(adapter).generate()
-                val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                fileKotlinPoet.addType(listAdapter).build().writeTo(codeGenerator, dependencies)
+                generateAdapterSourceFile(adapter, listAdapter, dependencies)
             }
         }
 
-        resolver.getSymbolsWithAnnotation(PagingDataAdapter::class.java.name).forEach { classDeclaration ->
-            if (classDeclaration is KSClassDeclaration) {
-                val adapter = adapterParser.parsePagingDataAdapter(classDeclaration)
+        resolver.getSymbolsWithAnnotation(PagingDataAdapter::class.java.name).forEach {
+            if (it is KSClassDeclaration) {
+                val adapter = adapterParser.parsePagingDataAdapter(it)
                 val pagingDataAdapter = PagingDataAdapterGenerator(adapter).generate()
-                val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                fileKotlinPoet.addType(pagingDataAdapter).build().writeTo(codeGenerator, dependencies)
+                generateAdapterSourceFile(adapter, pagingDataAdapter, dependencies)
             }
         }
 
-        resolver.getSymbolsWithAnnotation(PagedListAdapter::class.java.name).forEach { classDeclaration ->
-            if (classDeclaration is KSClassDeclaration) {
-                val adapter = adapterParser.parsePagedListAdapter(classDeclaration)
+        resolver.getSymbolsWithAnnotation(PagedListAdapter::class.java.name).forEach {
+            if (it is KSClassDeclaration) {
+                val adapter = adapterParser.parsePagedListAdapter(it)
                 val pagedListAdapter = PagedListAdapterGenerator(adapter).generate()
-                val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                fileKotlinPoet.addType(pagedListAdapter).build().writeTo(codeGenerator, dependencies)
+                generateAdapterSourceFile(adapter, pagedListAdapter, dependencies)
             }
         }
 
-        resolver.getSymbolsWithAnnotation(ArrayAdapter::class.java.name).forEach { classDeclaration ->
-            if (classDeclaration is KSClassDeclaration) {
-                val adapter = adapterParser.parseArrayAdapter(classDeclaration)
-                val adapterGenerator = ArrayAdapterGenerator(adapter).generate()
-                val fileKotlinPoet = FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                fileKotlinPoet.addType(adapterGenerator).build().writeTo(codeGenerator, dependencies)
+        resolver.getSymbolsWithAnnotation(ArrayAdapter::class.java.name).forEach {
+            if (it is KSClassDeclaration) {
+                val adapter = adapterParser.parseArrayAdapter(it)
+                val arrayAdapter = ArrayAdapterGenerator(adapter).generate()
+                generateAdapterSourceFile(adapter, arrayAdapter, dependencies)
             }
         }
 
         return emptyList()
+    }
+
+    @KotlinPoetKspPreview
+    private fun generateAdapterSourceFile(adapterData : AdapterData, adapter: TypeSpec, dependencies: Dependencies) {
+        val adapterSourceFile = FileSpec.builder(adapterData.adapterPackageName, adapterData.adapterClassName)
+        adapterSourceFile.addType(adapter).build().writeTo(env.codeGenerator, dependencies)
     }
 }
 
