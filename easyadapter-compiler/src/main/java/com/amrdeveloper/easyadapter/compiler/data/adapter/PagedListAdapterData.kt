@@ -7,9 +7,9 @@ data class PagedListAdapterData (
     override val appPackageId: String,
     override val adapterPackageName: String,
     override val adapterClassName: String,
-    override val modelClassName: String,
-    override val layoutId: String,
-    override val bindingDataList: List<BindingData>,
-    override val listeners : Set<ListenerData>,
+    val modelClassName: String,
+    val layoutId: String,
+    val bindingDataList: List<BindingData>,
+    val listeners : Set<ListenerData>,
     val diffUtilContent : String,
 ) : AdapterData()
