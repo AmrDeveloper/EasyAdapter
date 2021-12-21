@@ -22,6 +22,9 @@ object GeneratorConstants {
     val recyclerViewHolderClassName = ClassName("androidx.recyclerview.widget.RecyclerView", "ViewHolder")
     val diffUtilCallbackClassName = ClassName("androidx.recyclerview.widget.DiffUtil", "ItemCallback")
 
+    val baseExpandableAdapterClassName = ClassName("android.widget", "BaseExpandableListAdapter")
+
+    val mapClassName = ClassName("kotlin.collections", "Map")
     val listClassName = ClassName("kotlin.collections", "List")
     val picassoClassName = ClassName("com.squareup.picasso", "Picasso")
     val coilImageRequestClassName = ClassName("coil.request", "ImageRequest")
