@@ -1,7 +1,9 @@
 package com.amrdeveloper.easyadapter.compiler
 
 import com.amrdeveloper.easyadapter.adapter.*
+import com.amrdeveloper.easyadapter.bind.BindExpandable
 import com.amrdeveloper.easyadapter.compiler.data.adapter.AdapterData
+import com.amrdeveloper.easyadapter.compiler.data.bind.BindExpandableData
 import com.amrdeveloper.easyadapter.compiler.generator.*
 import com.amrdeveloper.easyadapter.compiler.parser.AdapterKspParser
 import com.google.devtools.ksp.KspExperimental
@@ -58,6 +60,23 @@ class EasyAdapterKspProcessor(private val env: SymbolProcessorEnvironment) : Sym
                 val adapter = adapterParser.parseArrayAdapter(it)
                 val arrayAdapter = ArrayAdapterGenerator(adapter).generate()
                 generateAdapterSourceFile(adapter, arrayAdapter, dependencies)
+            }
+        }
+
+        val expandableMap = mutableMapOf<String, BindExpandableData>()
+        resolver.getSymbolsWithAnnotation(BindExpandable::class.java.name).forEach { classDeclaration ->
+            if (classDeclaration is KSClassDeclaration) {
+                val expandableClass = adapterParser.parseBindExpandableClass(classDeclaration)
+                val fullClassName = "${expandableClass.modelClassPackageName}.${expandableClass.modelClassName}"
+                expandableMap[fullClassName] = expandableClass
+            }
+        }
+
+        resolver.getSymbolsWithAnnotation(ExpandableAdapter::class.java.name).forEach { classDeclaration ->
+            if (classDeclaration is KSClassDeclaration) {
+                val adapter = adapterParser.parseExpandableAdapter(classDeclaration, expandableMap)
+                val adapterGenerator = ExpandableAdapterGenerator(adapter).generate()
+                generateAdapterSourceFile(adapter, adapterGenerator, dependencies)
             }
         }
 

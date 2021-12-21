@@ -16,6 +16,7 @@ import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
+import com.squareup.kotlinpoet.ksp.toTypeName
 
 class AdapterKspParser(private val logger: KSPLogger) {
 
@@ -141,6 +142,68 @@ class AdapterKspParser(private val logger: KSPLogger) {
             adapterPackageName,
             adapterClassName,
             className,
+            layoutId,
+            viewBindingDataList,
+            adapterListeners,
+        )
+    }
+
+    @OptIn(KspExperimental::class, KotlinPoetKspPreview::class)
+    fun parseExpandableAdapter(classDeclaration: KSClassDeclaration, expandableMap : Map<String, BindExpandableData>) : ExpandableAdapterData {
+        val className = classDeclaration.simpleName.getShortName()
+        val adapterPackageName = classDeclaration.packageName.asString()
+        val annotation = classDeclaration.getAnnotationsByType(ExpandableAdapter::class).first()
+        val appPackageName = annotation.appPackageName
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ExpandableAdapter" else annotation.customClassName
+
+        for(property in classDeclaration.getDeclaredProperties()) {
+            if (property.isAnnotationPresent(BindExpandableMap::class)) {
+                val map = property.type
+                val dataTypeArguments = property.type.element?.typeArguments
+                dataTypeArguments?.let {
+                    val expandableGroupType = dataTypeArguments[0]
+                    val expandableGroupClassName = expandableGroupType.toTypeName().toString()
+                    val groupExpandableData = expandableMap[expandableGroupClassName]
+                    if (groupExpandableData == null) {
+                        logger.error("Can't find expandable group class with name $expandableGroupClassName", classDeclaration)
+                        return@let
+                    }
+
+                    val expandableItemType = dataTypeArguments[1]
+                    val expandableItemList = expandableItemType.type?.element
+                    val expandableItemClassName = expandableItemList?.typeArguments?.first()?.toTypeName().toString()
+                    val itemExpandableData = expandableMap[expandableItemClassName]
+                    if (itemExpandableData == null) {
+                        logger.error("Can't find expandable item class with name $itemExpandableData", classDeclaration)
+                        return@let
+                    }
+
+                    return ExpandableAdapterData(
+                        appPackageName,
+                        adapterPackageName,
+                        adapterClassName,
+                        groupExpandableData,
+                        itemExpandableData
+                    )
+                }
+            }
+        }
+
+        error("Can't find expandable classes to build the ExpandableAdapter")
+    }
+
+    @OptIn(KspExperimental::class, KotlinPoetKspPreview::class)
+    fun parseBindExpandableClass(classDeclaration: KSClassDeclaration) : BindExpandableData {
+        val className = classDeclaration.simpleName.getShortName()
+        val classPackageName = classDeclaration.packageName.asString()
+        val annotation = classDeclaration.getAnnotationsByType(BindExpandable::class).first()
+        val layoutId = annotation.layoutId
+        val viewBindingDataList = parseAdapterBindingList(classDeclaration)
+        val adapterListeners = parseAdapterListeners(classDeclaration)
+
+        return BindExpandableData(
+            className,
+            classPackageName,
             layoutId,
             viewBindingDataList,
             adapterListeners,
