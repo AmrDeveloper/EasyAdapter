@@ -4,6 +4,7 @@ import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.ClassName
 
 abstract class ListenerData {
+    abstract val modelName : String
     abstract val viewId : String
     abstract val listenerType : ListenerType
     abstract val listenerInterfaceName : String

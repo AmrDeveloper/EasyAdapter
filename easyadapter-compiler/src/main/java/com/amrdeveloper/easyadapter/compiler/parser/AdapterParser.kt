@@ -183,13 +183,14 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
     }
 
     private fun parseAdapterListeners(element: Element) : Set<ListenerData> {
+        val modelName = element.simpleName.toString()
         val listeners = mutableSetOf<ListenerData>()
         element.getAnnotationsByType(BindListeners::class.java).forEach { bindListeners ->
             bindListeners.value.forEach {
                 val listener = when (it.listenerType) {
-                    ListenerType.OnClick -> ClickListenerData(it.viewId)
-                    ListenerType.OnLongClick -> LongClickListenerData(it.viewId)
-                    ListenerType.OnTouch -> TouchListenerData(it.viewId)
+                    ListenerType.OnClick -> ClickListenerData(modelName, it.viewId)
+                    ListenerType.OnLongClick -> LongClickListenerData(modelName, it.viewId)
+                    ListenerType.OnTouch -> TouchListenerData(modelName, it.viewId)
                 }
                 val isUnique = listeners.add(listener)
                 if (isUnique.not()) {

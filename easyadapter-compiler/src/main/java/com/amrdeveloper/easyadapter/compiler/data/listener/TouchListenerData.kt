@@ -5,10 +5,11 @@ import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.ClassName
 
 data class TouchListenerData (
+    override val modelName: String,
     override val viewId: String,
     override val listenerType: ListenerType = ListenerType.OnTouch,
-    override val listenerInterfaceName: String = "On${viewId}TouchClickListener",
-    override val listenerVarName: String = "on${viewId}TouchClickListener",
+    override val listenerInterfaceName: String = "On${modelName}${viewId}TouchClickListener",
+    override val listenerVarName: String = "on${modelName}${viewId}TouchClickListener",
     override val listenerFunctionName: String = "on${viewId}TouchClick",
     override val listenerArgs: Map<String, ClassName> = mapOf (
         "view" to GeneratorConstants.viewClassName,
