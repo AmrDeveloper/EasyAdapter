@@ -1,6 +1,8 @@
 package com.amrdeveloper.easyadapter.compiler
 
 import com.amrdeveloper.easyadapter.adapter.*
+import com.amrdeveloper.easyadapter.bind.BindExpandable
+import com.amrdeveloper.easyadapter.compiler.data.bind.BindExpandableData
 import com.amrdeveloper.easyadapter.compiler.generator.*
 import com.amrdeveloper.easyadapter.compiler.parser.AdapterParser
 import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
@@ -65,6 +67,24 @@ class EasyAdapterProcessor : AbstractProcessor() {
                 .writeTo(generatedDirectory)
         }
 
+        val expandableMap = mutableMapOf<String, BindExpandableData>()
+        environment.getElementsAnnotatedWith(BindExpandable::class.java).forEach {
+
+            val expandableClass = adapterParser.parseExpandableClass(it)
+            val fullClassName = "${expandableClass.modelClassPackageName}.${expandableClass.modelClassName}"
+            expandableMap[fullClassName] = expandableClass
+        }
+
+        environment.getElementsAnnotatedWith(ExpandableAdapter::class.java).forEach {
+            val expandableAdapter = adapterParser.parseExpandableAdapter(it, expandableMap)
+            expandableAdapter?.let { adapter ->
+                FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
+                    .addType(ExpandableAdapterGenerator(adapter).generate()).build()
+                    .writeTo(generatedDirectory)
+            }
+
+        }
+
         return true
     }
 
@@ -73,7 +93,9 @@ class EasyAdapterProcessor : AbstractProcessor() {
         ListAdapter::class.java.canonicalName,
         PagingDataAdapter::class.java.canonicalName,
         PagedListAdapter::class.java.canonicalName,
-        ArrayAdapter::class.java.canonicalName
+        ArrayAdapter::class.java.canonicalName,
+        ExpandableAdapter::class.java.canonicalName,
+        BindExpandable::class.java.canonicalName
     )
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.latestSupported()

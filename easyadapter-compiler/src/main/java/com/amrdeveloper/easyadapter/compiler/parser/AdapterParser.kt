@@ -11,6 +11,7 @@ import com.amrdeveloper.easyadapter.compiler.data.listener.TouchListenerData
 import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
 import com.amrdeveloper.easyadapter.option.ListenerType
 import javax.lang.model.element.Element
+import javax.lang.model.type.DeclaredType
 import javax.lang.model.util.Elements
 
 class AdapterParser(private val elementUtils: Elements, private val logger: EasyAdapterLogger) {
@@ -122,6 +123,63 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
             adapterPackageName,
             adapterClassName,
             className,
+            layoutId,
+            viewBindingDataList,
+            adapterListeners,
+        )
+    }
+
+    fun parseExpandableAdapter(element : Element, expandableMap : Map<String, BindExpandableData>) : ExpandableAdapterData? {
+        val className = element.simpleName.toString()
+        val adapterPackageName = elementUtils.getPackageOf(element).toString()
+        val annotation = element.getAnnotation(ExpandableAdapter::class.java)
+        val appPackageName = annotation.appPackageName
+        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ExpandableAdapter" else annotation.customClassName
+
+        var expandableAdapter : ExpandableAdapterData? = null
+        val enclosedElements = element.enclosedElements
+        for (property in enclosedElements) {
+            property.getAnnotation(BindExpandableMap::class.java)?.let {
+                val declaredType = property.asType() as DeclaredType
+                val arguments = declaredType.typeArguments
+                val groupClassName = arguments[0].toString()
+                val groupExpandableData = expandableMap[groupClassName]
+                if (groupExpandableData == null) {
+                    logger.error("Can't find expandable group class with name $groupExpandableData", property)
+                    return@let
+                }
+
+                val itemClassName = (arguments[1] as DeclaredType).typeArguments[0].toString()
+                val itemExpandableData = expandableMap[itemClassName]
+                if (itemExpandableData == null) {
+                    logger.error("Can't find expandable item class with name $itemExpandableData", property)
+                    return@let
+                }
+
+                expandableAdapter = ExpandableAdapterData (
+                    appPackageName,
+                    adapterPackageName,
+                    adapterClassName,
+                    groupExpandableData,
+                    itemExpandableData
+                )
+            }
+        }
+
+        return expandableAdapter
+    }
+
+    fun parseExpandableClass(element: Element) : BindExpandableData {
+        val className = element.simpleName.toString()
+        val classPackageName = elementUtils.getPackageOf(element).toString()
+        val annotation = element.getAnnotation(BindExpandable::class.java)
+        val layoutId = annotation.layoutId
+        val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
+        val adapterListeners = parseAdapterListeners(element)
+
+        return BindExpandableData(
+            className,
+            classPackageName,
             layoutId,
             viewBindingDataList,
             adapterListeners,
