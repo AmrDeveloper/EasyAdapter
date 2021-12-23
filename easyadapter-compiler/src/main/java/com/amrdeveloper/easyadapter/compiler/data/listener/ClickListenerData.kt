@@ -15,5 +15,5 @@ data class ClickListenerData (
         "view" to GeneratorConstants.viewClassName
     ),
     override val listenerBind: String = "item, view",
-    override val defaultListenerFormat : String = ".setOnClickListener { view -> \n%L}",
+    override val defaultListenerFormat : String = ".setOnClickListener{ view -> \n%L}",
 ) : ListenerData()

@@ -16,5 +16,5 @@ data class TouchListenerData (
         "event" to GeneratorConstants.motionEventClassName
     ),
     override val listenerBind: String = "item, view, event",
-    override val defaultListenerFormat : String = ".setOnTouchListener { view, event -> \n %L \n false}"
+    override val defaultListenerFormat : String = ".setOnTouchListener{ view, event -> \n %L \n false}"
 ) : ListenerData()
