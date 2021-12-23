@@ -81,7 +81,7 @@ fun TypeSpec.Builder.addGlobalListenersRequirements (
         }
         
         addType(
-            TypeSpec.interfaceBuilder(it.listenerInterfaceName)
+            TypeSpec.funInterfaceBuilder(it.listenerInterfaceName)
                 .addFunction(
                     FunSpec.builder(it.listenerFunctionName)
                         .addModifiers(KModifier.ABSTRACT)
