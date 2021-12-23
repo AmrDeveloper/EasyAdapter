@@ -123,7 +123,7 @@ fun FunSpec.Builder.addListenerBindingList (
             addStatement("itemView${it.defaultListenerFormat}", listenerBinding)
         } else {
             addStatement(
-                "itemView.findViewById<%T>(%T.id.${it.viewId})${it.defaultListenerFormat}",
+                "itemView.findViewById<%L>(%L.id.${it.viewId})${it.defaultListenerFormat}",
                 GeneratorConstants.viewClassName,
                 rClassName,
                 listenerBinding
