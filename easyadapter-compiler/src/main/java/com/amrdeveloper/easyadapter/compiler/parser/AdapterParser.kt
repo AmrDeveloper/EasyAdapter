@@ -236,6 +236,14 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 val binding = BindImageData(elementName, it.viewId, it.loader)
                 viewBindingDataList.add(binding)
             }
+
+            element.getAnnotation(BindAlpha::class.java)?.let {
+                if (elementType != "float") {
+                    logger.error("@BindAlpha can used only with float data type", element)
+                }
+                val binding = BindAlphaData(elementName, it.viewId)
+                viewBindingDataList.add(binding)
+            }
         }
         return viewBindingDataList
     }

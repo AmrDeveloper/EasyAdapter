@@ -8,6 +8,7 @@ enum class BindType {
     BACKGROUND_IMAGE,
     BACKGROUND_RES,
     BACKGROUND_COLOR,
+    ALPHA,
     SWITCH,
     CUSTOM,
 }

@@ -272,6 +272,15 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 val binding = BindImageData(elementName, annotation.viewId, annotation.loader)
                 viewBindingDataList.add(binding)
             }
+
+            if (it.isAnnotationPresent(BindAlpha::class)) {
+                if (elementType != "Float") {
+                    logger.error("@BindAlpha can used only with float data type", it)
+                }
+                val annotation = it.getAnnotationsByType(BindAlpha::class).first()
+                val binding = BindAlphaData(elementName, annotation.viewId)
+                viewBindingDataList.add(binding)
+            }
         }
 
         return viewBindingDataList
