@@ -158,7 +158,11 @@ class AdapterKspParser(private val logger: KSPLogger) {
 
         for(property in classDeclaration.getDeclaredProperties()) {
             if (property.isAnnotationPresent(BindExpandableMap::class)) {
-                val map = property.type
+                val annotatedType = property.type.toTypeName().toString()
+                if (annotatedType.startsWith("kotlin.collections.Map").not()) {
+                    logger.error("BindExpandableMap used only with Map class", classDeclaration)
+                }
+
                 val dataTypeArguments = property.type.element?.typeArguments
                 dataTypeArguments?.let {
                     val expandableGroupType = dataTypeArguments[0]
