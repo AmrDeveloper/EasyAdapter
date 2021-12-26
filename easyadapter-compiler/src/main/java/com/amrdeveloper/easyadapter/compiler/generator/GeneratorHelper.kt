@@ -72,7 +72,7 @@ fun TypeSpec.Builder.addGlobalListenersRequirements (
     listeners : Set<ListenerData>
 ): TypeSpec.Builder = apply {
     listeners.forEach { it ->
-        val listenerClassName = ClassName("", it.listenerInterfaceName)
+        val listenerClassName = ClassName("", it.getListenerInterfaceName())
 
         val parameters = mutableListOf<ParameterSpec>()
         parameters.add(ParameterSpec("model", modelClassName))
@@ -81,9 +81,9 @@ fun TypeSpec.Builder.addGlobalListenersRequirements (
         }
         
         addType(
-            TypeSpec.funInterfaceBuilder(it.listenerInterfaceName)
+            TypeSpec.funInterfaceBuilder(it.getListenerInterfaceName())
                 .addFunction(
-                    FunSpec.builder(it.listenerFunctionName)
+                    FunSpec.builder(it.getListenerFunctionName())
                         .addModifiers(KModifier.ABSTRACT)
                         .addParameters(parameters)
                         .build()
@@ -92,7 +92,7 @@ fun TypeSpec.Builder.addGlobalListenersRequirements (
         )
 
         addProperty(
-            PropertySpec.builder(it.listenerVarName, listenerClassName)
+            PropertySpec.builder(it.getListenerVarName(), listenerClassName)
                 .mutable(true)
                 .addModifiers(KModifier.LATEINIT)
                 .addModifiers(KModifier.PRIVATE)
@@ -101,9 +101,9 @@ fun TypeSpec.Builder.addGlobalListenersRequirements (
 
         addFunction(
             FunSpec
-                .builder("set${it.listenerVarName}")
+                .builder("set${it.getListenerVarName().replaceFirstChar(Char::titlecase)}Listener")
                 .addParameter("listener", listenerClassName)
-                .addStatement("${it.listenerVarName} = listener")
+                .addStatement("${it.getListenerVarName()} = listener")
                 .build()
         )
     }
@@ -115,8 +115,8 @@ fun FunSpec.Builder.addListenerBindingList (
 ): FunSpec.Builder = apply {
     listeners.forEach {
         val listenerBinding = """
-            if (::${it.listenerVarName}.isInitialized) {
-                ${it.listenerVarName}.${it.listenerFunctionName}(${it.listenerBind})
+            if (::${it.getListenerVarName()}.isInitialized) {
+                ${it.getListenerVarName()}.${it.getListenerFunctionName()}(${it.listenerBind})
             }
         """.trimIndent()
         if (it.viewId == "itemView") {

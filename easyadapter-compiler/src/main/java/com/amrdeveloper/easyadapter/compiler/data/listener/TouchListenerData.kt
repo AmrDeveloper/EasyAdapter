@@ -8,9 +8,6 @@ data class TouchListenerData (
     override val modelName: String,
     override val viewId: String,
     override val listenerType: ListenerType = ListenerType.OnTouch,
-    override val listenerInterfaceName: String = "On${modelName}${viewId}TouchClickListener",
-    override val listenerVarName: String = "on${modelName}${viewId}TouchClickListener",
-    override val listenerFunctionName: String = "on${viewId}TouchClick",
     override val listenerArgs: Map<String, ClassName> = mapOf (
         "view" to GeneratorConstants.viewClassName,
         "event" to GeneratorConstants.motionEventClassName

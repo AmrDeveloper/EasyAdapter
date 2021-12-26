@@ -1,7 +1,7 @@
 package com.amrdeveloper.easyadapter.option
 
-enum class ListenerType {
-    OnClick,
-    OnLongClick,
-    OnTouch,
+enum class ListenerType(val shortName: String) {
+    OnClick("Click"),
+    OnLongClick("LongClick"),
+    OnTouch("Touch"),
 }
