@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.ClassName
 data class LongClickListenerData (
     override val modelName: String,
     override val viewId: String,
+    override val viewClassName: ClassName = GeneratorConstants.viewClassName,
     override val listenerType: ListenerType = ListenerType.OnLongClick,
     override val listenerArgs: Map<String, ClassName> = mapOf (
         "view" to GeneratorConstants.viewClassName

@@ -4,4 +4,5 @@ enum class ListenerType(val shortName: String) {
     OnClick("Click"),
     OnLongClick("LongClick"),
     OnTouch("Touch"),
+    OnCheckedChange("Checked")
 }

@@ -7,6 +7,7 @@ abstract class ListenerData {
 
     abstract val modelName : String
     abstract val viewId : String
+    abstract val viewClassName : ClassName
     abstract val listenerType : ListenerType
     abstract val listenerArgs : Map<String, ClassName>
     abstract val listenerBind : String

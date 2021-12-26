@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.ClassName
 data class ClickListenerData (
     override val modelName: String,
     override val viewId: String,
+    override val viewClassName: ClassName = GeneratorConstants.viewClassName,
     override val listenerType: ListenerType = ListenerType.OnClick,
     override val listenerArgs: Map<String, ClassName> = mapOf (
         "view" to GeneratorConstants.viewClassName

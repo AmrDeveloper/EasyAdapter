@@ -4,10 +4,7 @@ import com.amrdeveloper.easyadapter.adapter.*
 import com.amrdeveloper.easyadapter.bind.*
 import com.amrdeveloper.easyadapter.compiler.data.adapter.*
 import com.amrdeveloper.easyadapter.compiler.data.bind.*
-import com.amrdeveloper.easyadapter.compiler.data.listener.ClickListenerData
-import com.amrdeveloper.easyadapter.compiler.data.listener.ListenerData
-import com.amrdeveloper.easyadapter.compiler.data.listener.LongClickListenerData
-import com.amrdeveloper.easyadapter.compiler.data.listener.TouchListenerData
+import com.amrdeveloper.easyadapter.compiler.data.listener.*
 import com.amrdeveloper.easyadapter.option.ListenerType
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getAnnotationsByType
@@ -295,6 +292,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 ListenerType.OnClick -> ClickListenerData(modelName, it.viewId)
                 ListenerType.OnLongClick -> LongClickListenerData(modelName, it.viewId)
                 ListenerType.OnTouch -> TouchListenerData(modelName, it.viewId)
+                ListenerType.OnCheckedChange -> CheckedListenerData(modelName, it.viewId)
             }
             val isUnique = listeners.add(listener)
             if (isUnique.not()) {
