@@ -255,6 +255,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                     ListenerType.OnLongClick -> LongClickListenerData(modelName, it.viewId)
                     ListenerType.OnTouch -> TouchListenerData(modelName, it.viewId)
                     ListenerType.OnCheckedChange -> CheckedListenerData(modelName, it.viewId)
+                    ListenerType.OnTextChange -> TextChangedListenerData(modelName, it.viewId)
                 }
                 val isUnique = listeners.add(listener)
                 if (isUnique.not()) {

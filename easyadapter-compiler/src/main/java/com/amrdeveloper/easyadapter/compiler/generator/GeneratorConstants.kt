@@ -7,6 +7,8 @@ object GeneratorConstants {
     val contextClassName = ClassName("android.content", "Context")
     val viewGroupClassName = ClassName("android.view", "ViewGroup")
     val viewClassName = ClassName("android.view", "View")
+    val textViewClassName = ClassName("android.widget", "TextView")
+    val editableClassName = ClassName("android.text", "Editable")
     val compoundButtonClassName = ClassName("android.widget", "CompoundButton")
     val layoutInflaterClassName = ClassName("android.view", "LayoutInflater")
 
