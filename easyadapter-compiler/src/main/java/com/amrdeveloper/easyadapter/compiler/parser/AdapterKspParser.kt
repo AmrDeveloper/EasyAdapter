@@ -293,6 +293,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 ListenerType.OnLongClick -> LongClickListenerData(modelName, it.viewId)
                 ListenerType.OnTouch -> TouchListenerData(modelName, it.viewId)
                 ListenerType.OnCheckedChange -> CheckedListenerData(modelName, it.viewId)
+                ListenerType.OnTextChange -> TextChangedListenerData(modelName, it.viewId)
             }
             val isUnique = listeners.add(listener)
             if (isUnique.not()) {
