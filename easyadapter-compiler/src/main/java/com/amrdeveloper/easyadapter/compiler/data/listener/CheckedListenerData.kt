@@ -9,7 +9,7 @@ data class CheckedListenerData (
     override val viewId: String,
     override val viewClassName: ClassName = GeneratorConstants.compoundButtonClassName,
     override val listenerType: ListenerType = ListenerType.OnCheckedChange,
-    override val defaultListenerFormat : String = ".setOnCheckedChangeListener{ _, isChecked -> \n%L}",
+    override val defaultListenerFormat : String = "setOnCheckedChangeListener{ _, isChecked -> \n%L}",
 ) : ListenerData() {
 
     override fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
@@ -54,10 +54,10 @@ data class CheckedListenerData (
             }
         """.trimIndent()
         if (viewId == "itemView") {
-            builder.addStatement("itemView${defaultListenerFormat}", listenerBinding)
+            builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
         } else {
             builder.addStatement(
-                "itemView.findViewById<%L>(%L.id.${viewId})${defaultListenerFormat}",
+                "itemView.findViewById<%L>(%L.id.${viewId}).${defaultListenerFormat}",
                 viewClassName,
                 rClassName,
                 listenerBinding

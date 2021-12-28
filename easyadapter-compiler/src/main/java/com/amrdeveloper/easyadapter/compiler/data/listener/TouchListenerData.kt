@@ -9,7 +9,7 @@ data class TouchListenerData (
     override val viewId: String,
     override val viewClassName: ClassName = GeneratorConstants.viewClassName,
     override val listenerType: ListenerType = ListenerType.OnTouch,
-    override val defaultListenerFormat : String = ".setOnTouchListener{ view, event -> \n %L \n false}"
+    override val defaultListenerFormat : String = "setOnTouchListener{ view, event -> \n %L \n false}"
 ) : ListenerData() {
 
     override fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
@@ -55,10 +55,10 @@ data class TouchListenerData (
             }
         """.trimIndent()
         if (viewId == "itemView") {
-            builder.addStatement("itemView${defaultListenerFormat}", listenerBinding)
+            builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
         } else {
             builder.addStatement(
-                "itemView.findViewById<%L>(%L.id.${viewId})${defaultListenerFormat}",
+                "itemView.findViewById<%L>(%L.id.${viewId}).${defaultListenerFormat}",
                 viewClassName,
                 rClassName,
                 listenerBinding

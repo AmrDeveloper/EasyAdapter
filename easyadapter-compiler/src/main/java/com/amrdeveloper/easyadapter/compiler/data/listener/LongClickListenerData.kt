@@ -9,7 +9,7 @@ data class LongClickListenerData (
     override val viewId: String,
     override val viewClassName: ClassName = GeneratorConstants.viewClassName,
     override val listenerType: ListenerType = ListenerType.OnLongClick,
-    override val defaultListenerFormat : String = ".setOnLongClickListener{ view -> \n %L \n true}"
+    override val defaultListenerFormat : String = "setOnLongClickListener{ view -> \n %L \n true}"
 ) : ListenerData() {
 
     override fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
@@ -54,10 +54,10 @@ data class LongClickListenerData (
             }
         """.trimIndent()
         if (viewId == "itemView") {
-            builder.addStatement("itemView${defaultListenerFormat}", listenerBinding)
+            builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
         } else {
             builder.addStatement(
-                "itemView.findViewById<%L>(%L.id.${viewId})${defaultListenerFormat}",
+                "itemView.findViewById<%L>(%L.id.${viewId}).${defaultListenerFormat}",
                 viewClassName,
                 rClassName,
                 listenerBinding

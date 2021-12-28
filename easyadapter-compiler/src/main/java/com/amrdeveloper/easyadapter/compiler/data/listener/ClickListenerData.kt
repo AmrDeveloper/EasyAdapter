@@ -9,7 +9,7 @@ data class ClickListenerData (
     override val viewId: String,
     override val viewClassName: ClassName = GeneratorConstants.viewClassName,
     override val listenerType: ListenerType = ListenerType.OnClick,
-    override val defaultListenerFormat : String = ".setOnClickListener{ view -> \n%L}",
+    override val defaultListenerFormat : String = "setOnClickListener{ view -> \n%L}",
 ) : ListenerData() {
 
     override fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
@@ -50,10 +50,10 @@ data class ClickListenerData (
             }
         """.trimIndent()
         if (viewId == "itemView") {
-            builder.addStatement("itemView${defaultListenerFormat}", listenerBinding)
+            builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
         } else {
             builder.addStatement(
-                "itemView.findViewById<%L>(%L.id.${viewId})${defaultListenerFormat}",
+                "itemView.findViewById<%L>(%L.id.${viewId}).${defaultListenerFormat}",
                 viewClassName,
                 rClassName,
                 listenerBinding
