@@ -1,42 +1,18 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
-import com.amrdeveloper.easyadapter.compiler.data.bind.BindType
 import com.amrdeveloper.easyadapter.compiler.data.bind.BindingData
 import com.amrdeveloper.easyadapter.compiler.data.listener.ListenerData
-import com.amrdeveloper.easyadapter.option.ViewSetterType
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
 fun FunSpec.Builder.addBindingDataList(
     rClassName: ClassName,
+    viewTable: ViewTable,
     bindingDataList: List<BindingData>
 ): FunSpec.Builder = apply {
     bindingDataList.forEach {
-        val bindingValueSetter =
-            if (it.viewSetterType == ViewSetterType.PROPERTY)
-                "${it.viewClassSetter}=item.${it.fieldName}"
-            else
-                "${it.viewClassSetter}(item.${it.fieldName})"
-        when (it.bindType) {
-            BindType.IMAGE -> {
-                addStatement(
-                    it.poetFormat,
-                    bindingValueSetter,
-                    it.viewClassType,
-                    rClassName,
-                    it.viewId
-                )
-            }
-            else -> {
-                addStatement(
-                    it.poetFormat,
-                    it.viewClassType,
-                    rClassName,
-                    it.viewId,
-                    bindingValueSetter
-                )
-            }
-        }
+        it.generateFieldBinding(this, viewTable, rClassName)
     }
 }
 
@@ -80,9 +56,10 @@ fun TypeSpec.Builder.addGlobalListenersRequirements(
 
 fun FunSpec.Builder.addListenerBindingList(
     rClassName: ClassName,
+    viewTable: ViewTable,
     listeners: Set<ListenerData>
 ): FunSpec.Builder = apply {
     listeners.forEach {
-        it.generateBinds(this, rClassName)
+        it.generateBinds(this, viewTable, rClassName)
     }
 }

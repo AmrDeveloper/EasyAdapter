@@ -1,6 +1,9 @@
 package com.amrdeveloper.easyadapter.compiler.data.bind
 
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.amrdeveloper.easyadapter.option.ViewSetterType
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
 
 data class BindVisibilityData (
     override var fieldName: String,
@@ -9,5 +12,15 @@ data class BindVisibilityData (
     override var viewClassType: String = "android.view.View",
     override var viewClassSetter: String = "setVisibility",
     override var viewSetterType: ViewSetterType = ViewSetterType.METHOD,
-    override val poetFormat: String = "itemView.findViewById<%L>(%T.id.%L).%L"
-) : BindingData()
+) : BindingData() {
+
+    override fun generateFieldBinding(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName) {
+        var variableName = table.resolve(viewId)
+        if (variableName.isEmpty()) {
+            variableName = table.define(viewId)
+            declareViewVariable(builder, variableName, viewClassType, viewId, rClass)
+        }
+
+        builder.addStatement ("$variableName.${getBindingValueSetter()}")
+    }
+}

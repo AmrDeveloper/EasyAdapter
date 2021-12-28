@@ -1,10 +1,11 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
 import com.amrdeveloper.easyadapter.compiler.data.adapter.PagedListAdapterData
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) : AdapterGenerator {
+class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) : AdapterGenerator() {
 
     private val adapterName = adapterData.adapterClassName
     private val appPackageName = adapterData.appPackageId
@@ -48,7 +49,7 @@ class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) :
                 .addStatement("val item = getItem(position) ?: return")
                 .addStatement("viewHolder.bind(item)")
                 .addStatement("val itemView = viewHolder.itemView")
-                .addListenerBindingList(rClassName, adapterData.listeners)
+                .addListenerBindingList(rClassName, ViewTable(), adapterData.listeners)
                 .build()
         )
     }
@@ -69,7 +70,7 @@ class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) :
     private fun TypeSpec.Builder.addBindingMethod(): TypeSpec.Builder = addFunction(
         FunSpec.builder("bind")
             .addParameter("item", modelClassName)
-            .addBindingDataList(rClassName, adapterData.bindingDataList)
+            .addBindingDataList(rClassName, ViewTable(), adapterData.bindingDataList)
             .build()
     )
 }

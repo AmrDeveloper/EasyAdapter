@@ -1,5 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.data.listener
 
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.amrdeveloper.easyadapter.compiler.utils.toCamelCase
 import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.*
@@ -14,7 +15,7 @@ abstract class ListenerData {
 
     abstract fun generateInterfaceDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName)
 
-    abstract fun generateBinds(builder: FunSpec.Builder, rClassName: ClassName)
+    abstract fun generateBinds(builder: FunSpec.Builder, table : ViewTable, rClass: ClassName)
 
     fun generateListenerVariable(builder: TypeSpec.Builder) {
         builder.addProperty(
@@ -33,6 +34,13 @@ abstract class ListenerData {
                 .addParameter("listener", getListenerClassName())
                 .addStatement("${getListenerVarName()} = listener")
                 .build()
+        )
+    }
+
+    fun declareViewVariable(builder: FunSpec.Builder, name : String, viewType: ClassName, viewId: String, rClass: ClassName) {
+        builder.addStatement (
+            "val %L=itemView.findViewById<%T>(%T.id.%L)",
+            name, viewType, rClass, viewId
         )
     }
 

@@ -1,6 +1,9 @@
 package com.amrdeveloper.easyadapter.compiler.data.bind
 
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.amrdeveloper.easyadapter.option.ViewSetterType
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
 
 abstract class BindingData {
     abstract var fieldName: String
@@ -9,5 +12,20 @@ abstract class BindingData {
     abstract var viewClassType: String
     abstract var viewClassSetter: String
     abstract var viewSetterType: ViewSetterType
-    abstract val poetFormat : String
+
+    abstract fun generateFieldBinding(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName)
+
+    fun declareViewVariable(builder: FunSpec.Builder, name : String, viewType: String, viewId: String, rClass: ClassName) {
+        builder.addStatement (
+            "val %L=itemView.findViewById<%L>(%T.id.%L)",
+            name, viewType, rClass, viewId
+        )
+    }
+
+    fun getBindingValueSetter(): String {
+        return if (viewSetterType == ViewSetterType.PROPERTY)
+            "$viewClassSetter=item.$fieldName"
+        else
+            "$viewClassSetter(item.$fieldName)"
+    }
 }

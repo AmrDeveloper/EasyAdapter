@@ -1,6 +1,7 @@
 package com.amrdeveloper.easyadapter.compiler.data.listener
 
 import com.amrdeveloper.easyadapter.compiler.generator.GeneratorConstants
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.amrdeveloper.easyadapter.compiler.utils.toCamelCase
 import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.*
@@ -30,7 +31,7 @@ data class TouchListenerData (
         )
     }
 
-    override fun generateBinds(builder: FunSpec.Builder, rClassName: ClassName) {
+    override fun generateBinds(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName) {
         val listenerFunctionName = "on${modelName}${viewId.toCamelCase()}TouchListener"
         val listenerBinding = """
             if (::${getListenerVarName()}.isInitialized) {
@@ -40,12 +41,13 @@ data class TouchListenerData (
         if (viewId == "itemView") {
             builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
         } else {
-            builder.addStatement(
-                "itemView.findViewById<%L>(%L.id.${viewId}).${defaultListenerFormat}",
-                viewClassName,
-                rClassName,
-                listenerBinding
-            )
+            var variableName = table.resolve(viewId)
+            if (variableName.isEmpty()) {
+                variableName = table.define(viewId)
+                declareViewVariable(builder, variableName, viewClassName, viewId, rClass)
+            }
+
+            builder.addStatement("$variableName.${defaultListenerFormat}", listenerBinding)
         }
     }
 }

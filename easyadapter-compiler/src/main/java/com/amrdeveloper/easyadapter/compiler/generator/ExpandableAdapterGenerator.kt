@@ -1,12 +1,13 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
 import com.amrdeveloper.easyadapter.compiler.data.adapter.ExpandableAdapterData
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.squareup.kotlinpoet.TypeSpec
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData) : AdapterGenerator {
+class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData) : AdapterGenerator() {
 
     private val adapterName = adapterData.adapterClassName
     private val appPackageName = adapterData.appPackageId
@@ -15,6 +16,8 @@ class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData)
     private val expandableGroupList = GeneratorConstants.listClassName.parameterizedBy(groupClassName)
     private val expandableMapList = GeneratorConstants.mapClassName.parameterizedBy(groupClassName, GeneratorConstants.listClassName.parameterizedBy(itemClassName))
     private val rClassName = ClassName(appPackageName, "R")
+    private val groupViewTable = ViewTable()
+    private val childViewTable = ViewTable()
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
         .primaryConstructor(
@@ -53,8 +56,8 @@ class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData)
                 GeneratorConstants.layoutInflaterClassName,
                 rClassName, adapterData.expandableGroup.layoutId)
             .addStatement("val item = getGroup(listPosition)")
-            .addBindingDataList(rClassName, adapterData.expandableGroup.bindingDataList)
-            .addListenerBindingList(rClassName, adapterData.expandableGroup.listeners)
+            .addBindingDataList(rClassName, groupViewTable, adapterData.expandableGroup.bindingDataList)
+            .addListenerBindingList(rClassName, groupViewTable, adapterData.expandableGroup.listeners)
             .addStatement("return itemView")
             .build()
         )
@@ -71,8 +74,8 @@ class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData)
                 GeneratorConstants.layoutInflaterClassName,
                 rClassName, adapterData.expandableItem.layoutId)
             .addStatement("val item = getChild(listPosition, expandedListPosition)")
-            .addBindingDataList(rClassName, adapterData.expandableItem.bindingDataList)
-            .addListenerBindingList(rClassName, adapterData.expandableItem.listeners)
+            .addBindingDataList(rClassName, childViewTable, adapterData.expandableItem.bindingDataList)
+            .addListenerBindingList(rClassName, childViewTable, adapterData.expandableItem.listeners)
             .addStatement("return itemView")
             .build()
         )

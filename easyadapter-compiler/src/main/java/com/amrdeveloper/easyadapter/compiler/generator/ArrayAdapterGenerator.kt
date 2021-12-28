@@ -1,16 +1,18 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
 import com.amrdeveloper.easyadapter.compiler.data.adapter.ArrayAdapterData
+import com.amrdeveloper.easyadapter.compiler.utils.ViewTable
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 
-class ArrayAdapterGenerator(private val adapterData : ArrayAdapterData) : AdapterGenerator {
+class ArrayAdapterGenerator(private val adapterData : ArrayAdapterData) : AdapterGenerator() {
 
     private val adapterName = adapterData.adapterClassName
     private val appPackageName = adapterData.appPackageId
     private val modelClassName = ClassName(adapterData.adapterPackageName, adapterData.modelClassName)
     private val itemsListClassName = GeneratorConstants.listClassName.parameterizedBy(modelClassName)
     private val rClassName = ClassName(appPackageName, "R")
+    private val viewTable = ViewTable()
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
         .primaryConstructor(FunSpec.constructorBuilder()
@@ -37,8 +39,8 @@ class ArrayAdapterGenerator(private val adapterData : ArrayAdapterData) : Adapte
                 adapterData.layoutId
             )
             .addStatement("val item = getItem(position) ?: return itemView")
-            .addBindingDataList(rClassName, adapterData.bindingDataList)
-            .addListenerBindingList(rClassName, adapterData.listeners)
+            .addBindingDataList(rClassName, viewTable, adapterData.bindingDataList)
+            .addListenerBindingList(rClassName, viewTable, adapterData.listeners)
             .returns(GeneratorConstants.viewClassName)
             .addStatement("return itemView")
             .build()
