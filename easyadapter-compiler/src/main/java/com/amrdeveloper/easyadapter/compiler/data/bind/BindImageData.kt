@@ -5,7 +5,7 @@ import com.amrdeveloper.easyadapter.option.ImageLoader
 import com.amrdeveloper.easyadapter.option.ViewSetterType
 
 data class BindImageData (
-    override var value: String,
+    override var fieldName: String,
     override var viewId: String,
     val imageLoader: ImageLoader,
     override var bindType: BindType = BindType.IMAGE,

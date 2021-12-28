@@ -14,9 +14,9 @@ fun FunSpec.Builder.addBindingDataList(
     bindingDataList.forEach {
         val bindingValueSetter =
             if (it.viewSetterType == ViewSetterType.PROPERTY)
-                "${it.viewClassSetter}=item.${it.value}"
+                "${it.viewClassSetter}=item.${it.fieldName}"
             else
-                "${it.viewClassSetter}(item.${it.value})"
+                "${it.viewClassSetter}(item.${it.fieldName})"
         when (it.bindType) {
             BindType.IMAGE -> {
                 addStatement(
