@@ -1,5 +1,6 @@
 package com.amrdeveloper.easyadapter.compiler.data.listener
 
+import com.amrdeveloper.easyadapter.compiler.utils.toCamelCase
 import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.*
 
@@ -28,7 +29,7 @@ abstract class ListenerData {
     fun generateListenerVariableSetter(builder: TypeSpec.Builder) {
         builder.addFunction(
             FunSpec
-                .builder("set${getListenerVarName().replaceFirstChar(Char::titlecase)}Listener")
+                .builder("set${getListenerVarName().toCamelCase(true)}Listener")
                 .addParameter("listener", getListenerClassName())
                 .addStatement("${getListenerVarName()} = listener")
                 .build()
@@ -39,32 +40,11 @@ abstract class ListenerData {
         return ClassName("", getListenerInterfaceName())
     }
 
-    fun getFormattedViewId() : String {
-        val builder = StringBuilder()
-        builder.append(viewId.first().titlecase())
-        var shouldCapitalizeNext = false
-        for (i in 1 until viewId.length) {
-            if (viewId[i] == '_') {
-                shouldCapitalizeNext = true
-                continue
-            }
-
-            if (shouldCapitalizeNext) {
-                builder.append(viewId[i].titlecase())
-                shouldCapitalizeNext = false
-                continue
-            }
-
-            builder.append(viewId[i])
-        }
-        return builder.toString()
-    }
-
     fun getListenerInterfaceName() : String {
-        return "On${modelName}${getFormattedViewId()}${listenerType.shortName}Listener"
+        return "On${modelName}${viewId.toCamelCase()}${listenerType.shortName}Listener"
     }
 
     fun getListenerVarName() : String {
-        return "on${getFormattedViewId()}${listenerType.shortName}"
+        return "on${viewId.toCamelCase()}${listenerType.shortName}"
     }
 }

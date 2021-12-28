@@ -1,6 +1,7 @@
 package com.amrdeveloper.easyadapter.compiler.data.listener
 
 import com.amrdeveloper.easyadapter.compiler.generator.GeneratorConstants
+import com.amrdeveloper.easyadapter.compiler.utils.toCamelCase
 import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.*
 
@@ -13,7 +14,7 @@ data class ClickListenerData (
 ) : ListenerData() {
 
     override fun generateInterfaceDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
-        val listenerFunctionName = "on${modelName}${getFormattedViewId()}ClickListener"
+        val listenerFunctionName = "on${modelName}${viewId.toCamelCase()}ClickListener"
 
         builder.addType(
             TypeSpec.funInterfaceBuilder(getListenerInterfaceName())
@@ -28,7 +29,7 @@ data class ClickListenerData (
     }
 
     override fun generateBinds(builder: FunSpec.Builder, rClassName: ClassName) {
-        val listenerFunctionName = "on${modelName}${getFormattedViewId()}ClickListener"
+        val listenerFunctionName = "on${modelName}${viewId.toCamelCase()}ClickListener"
         val listenerBinding = """
             if (::${getListenerVarName()}.isInitialized) {
                 ${getListenerVarName()}.$listenerFunctionName(item, view)
