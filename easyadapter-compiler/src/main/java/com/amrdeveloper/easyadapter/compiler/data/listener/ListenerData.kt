@@ -2,6 +2,8 @@ package com.amrdeveloper.easyadapter.compiler.data.listener
 
 import com.amrdeveloper.easyadapter.option.ListenerType
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.TypeSpec
 
 abstract class ListenerData {
 
@@ -9,9 +11,11 @@ abstract class ListenerData {
     abstract val viewId : String
     abstract val viewClassName : ClassName
     abstract val listenerType : ListenerType
-    abstract val listenerArgs : Map<String, ClassName>
-    abstract val listenerBind : String
     abstract val defaultListenerFormat : String
+
+    abstract fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName)
+
+    abstract fun generateBinds(builder: FunSpec.Builder, rClassName: ClassName)
 
     private fun getFormattedViewId() : String {
         val builder = StringBuilder()

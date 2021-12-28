@@ -67,67 +67,20 @@ fun TypeSpec.Builder.addDiffUtilsItemCallback(
         .build()
 )
 
-fun TypeSpec.Builder.addGlobalListenersRequirements (
+fun TypeSpec.Builder.addGlobalListenersRequirements(
     modelClassName: ClassName,
-    listeners : Set<ListenerData>
+    listeners: Set<ListenerData>
 ): TypeSpec.Builder = apply {
-    listeners.forEach { it ->
-        val listenerClassName = ClassName("", it.getListenerInterfaceName())
-
-        val parameters = mutableListOf<ParameterSpec>()
-        parameters.add(ParameterSpec("model", modelClassName))
-        it.listenerArgs.forEach {
-            parameters.add(ParameterSpec(it.key, it.value))
-        }
-        
-        addType(
-            TypeSpec.funInterfaceBuilder(it.getListenerInterfaceName())
-                .addFunction(
-                    FunSpec.builder(it.getListenerFunctionName())
-                        .addModifiers(KModifier.ABSTRACT)
-                        .addParameters(parameters)
-                        .build()
-                )
-                .build()
-        )
-
-        addProperty(
-            PropertySpec.builder(it.getListenerVarName(), listenerClassName)
-                .mutable(true)
-                .addModifiers(KModifier.LATEINIT)
-                .addModifiers(KModifier.PRIVATE)
-                .build()
-        )
-
-        addFunction(
-            FunSpec
-                .builder("set${it.getListenerVarName().replaceFirstChar(Char::titlecase)}Listener")
-                .addParameter("listener", listenerClassName)
-                .addStatement("${it.getListenerVarName()} = listener")
-                .build()
-        )
+    listeners.forEach {
+        it.generateDeclarations(this, modelClassName)
     }
 }
 
-fun FunSpec.Builder.addListenerBindingList (
+fun FunSpec.Builder.addListenerBindingList(
     rClassName: ClassName,
-    listeners : Set<ListenerData>
+    listeners: Set<ListenerData>
 ): FunSpec.Builder = apply {
     listeners.forEach {
-        val listenerBinding = """
-            if (::${it.getListenerVarName()}.isInitialized) {
-                ${it.getListenerVarName()}.${it.getListenerFunctionName()}(${it.listenerBind})
-            }
-        """.trimIndent()
-        if (it.viewId == "itemView") {
-            addStatement("itemView${it.defaultListenerFormat}", listenerBinding)
-        } else {
-            addStatement(
-                "itemView.findViewById<%L>(%L.id.${it.viewId})${it.defaultListenerFormat}",
-                it.viewClassName,
-                rClassName,
-                listenerBinding
-            )
-        }
+        it.generateBinds(this, rClassName)
     }
 }
