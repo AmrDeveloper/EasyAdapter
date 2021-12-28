@@ -12,45 +12,27 @@ data class LongClickListenerData (
     override val defaultListenerFormat : String = "setOnLongClickListener{ view -> \n %L \n true}"
 ) : ListenerData() {
 
-    override fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
-        val listenerClassName = ClassName("", getListenerInterfaceName())
-
-        val parameters = mutableListOf<ParameterSpec>()
-        parameters.add(ParameterSpec("model", modelClassName))
-        parameters.add(ParameterSpec("view", GeneratorConstants.viewClassName))
+    override fun generateInterfaceDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
+        val listenerFunctionName = "on${modelName}${getFormattedViewId()}LongClickListener"
 
         builder.addType(
             TypeSpec.funInterfaceBuilder(getListenerInterfaceName())
                 .addFunction(
-                    FunSpec.builder(getListenerFunctionName())
+                    FunSpec.builder(listenerFunctionName)
                         .addModifiers(KModifier.ABSTRACT)
-                        .addParameters(parameters)
+                        .addParameter("model", modelClassName)
+                        .addParameter("view", GeneratorConstants.viewClassName)
                         .build()
                 )
-                .build()
-        )
-
-        builder.addProperty(
-            PropertySpec.builder(getListenerVarName(), listenerClassName)
-                .mutable(true)
-                .addModifiers(KModifier.LATEINIT)
-                .addModifiers(KModifier.PRIVATE)
-                .build()
-        )
-
-        builder.addFunction(
-            FunSpec
-                .builder("set${getListenerVarName().replaceFirstChar(Char::titlecase)}Listener")
-                .addParameter("listener", listenerClassName)
-                .addStatement("${getListenerVarName()} = listener")
                 .build()
         )
     }
 
     override fun generateBinds(builder: FunSpec.Builder, rClassName: ClassName) {
+        val listenerFunctionName = "on${modelName}${getFormattedViewId()}LongClickListener"
         val listenerBinding = """
             if (::${getListenerVarName()}.isInitialized) {
-                ${getListenerVarName()}.${getListenerFunctionName()}(item, view)
+                ${getListenerVarName()}.$listenerFunctionName(item, view)
             }
         """.trimIndent()
         if (viewId == "itemView") {

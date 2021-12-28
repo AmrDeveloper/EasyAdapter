@@ -26,10 +26,8 @@ data class TextChangedListenerData (
     """.trimIndent()
 ) : ListenerData() {
 
-    override fun generateDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
-        val listenerClassName = ClassName("", getListenerInterfaceName())
-
-        builder.addType(
+    override fun generateInterfaceDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
+        builder.addType (
             TypeSpec.interfaceBuilder(getListenerInterfaceName())
                 .addFunction(
                     FunSpec.builder("beforeTextChanged")
@@ -56,22 +54,6 @@ data class TextChangedListenerData (
                         .addParameter(ParameterSpec("s", GeneratorConstants.editableClassName))
                         .build()
                 ).build()
-        )
-
-        builder.addProperty(
-            PropertySpec.builder(getListenerVarName(), listenerClassName)
-                .mutable(true)
-                .addModifiers(KModifier.LATEINIT)
-                .addModifiers(KModifier.PRIVATE)
-                .build()
-        )
-
-        builder.addFunction(
-            FunSpec
-                .builder("set${getListenerVarName().replaceFirstChar(Char::titlecase)}Listener")
-                .addParameter("listener", listenerClassName)
-                .addStatement("${getListenerVarName()} = listener")
-                .build()
         )
     }
 

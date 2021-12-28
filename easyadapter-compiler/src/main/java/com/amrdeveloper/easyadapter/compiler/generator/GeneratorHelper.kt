@@ -72,7 +72,9 @@ fun TypeSpec.Builder.addGlobalListenersRequirements(
     listeners: Set<ListenerData>
 ): TypeSpec.Builder = apply {
     listeners.forEach {
-        it.generateDeclarations(this, modelClassName)
+        it.generateInterfaceDeclarations(this, modelClassName)
+        it.generateListenerVariable(this)
+        it.generateListenerVariableSetter(this)
     }
 }
 
