@@ -1,9 +1,9 @@
 package com.amrdeveloper.easyadapter.compiler.utils
 
-class ViewTable {
+class ViewTable(vararg extraNames: String) {
 
     private val table = mutableMapOf<String, String>()
-    private val reservedNames = arrayOf("item", "itemView")
+    private val reservedNames = mutableSetOf("item", "itemView").plus(extraNames)
 
     fun define(viewId: String): String {
         val camelCaseViewId = viewId.toCamelCase(false)

@@ -12,7 +12,7 @@ class ArrayAdapterGenerator(private val adapterData : ArrayAdapterData) : Adapte
     private val modelClassName = ClassName(adapterData.adapterPackageName, adapterData.modelClassName)
     private val itemsListClassName = GeneratorConstants.listClassName.parameterizedBy(modelClassName)
     private val rClassName = ClassName(appPackageName, "R")
-    private val viewTable = ViewTable()
+    private val viewTable = ViewTable("position", "convertView", "parent")
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
         .primaryConstructor(FunSpec.constructorBuilder()

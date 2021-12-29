@@ -16,8 +16,6 @@ class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData)
     private val expandableGroupList = GeneratorConstants.listClassName.parameterizedBy(groupClassName)
     private val expandableMapList = GeneratorConstants.mapClassName.parameterizedBy(groupClassName, GeneratorConstants.listClassName.parameterizedBy(itemClassName))
     private val rClassName = ClassName(appPackageName, "R")
-    private val groupViewTable = ViewTable()
-    private val childViewTable = ViewTable()
 
     override fun generate(): TypeSpec = TypeSpec.classBuilder(adapterName)
         .primaryConstructor(
@@ -45,6 +43,15 @@ class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData)
         .build()
 
     private fun TypeSpec.Builder.addBaseMethods(): TypeSpec.Builder = apply {
+        val groupViewTable = ViewTable(
+            "groupList",
+            "itemsMap",
+            "listPosition",
+            "isExpanded",
+            "convertView",
+            "parent"
+        )
+
         addFunction(FunSpec.builder("getGroupView")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("listPosition", INT)
@@ -60,6 +67,16 @@ class ExpandableAdapterGenerator(private val adapterData: ExpandableAdapterData)
             .addListenerBindingList(rClassName, groupViewTable, adapterData.expandableGroup.listeners)
             .addStatement("return itemView")
             .build()
+        )
+
+        val childViewTable = ViewTable(
+            "groupList",
+            "itemsMap",
+            "listPosition",
+            "expandedListPosition",
+            "isLastChild",
+            "convertView",
+            "parent"
         )
 
         addFunction(FunSpec.builder("getChildView")

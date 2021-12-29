@@ -41,6 +41,8 @@ class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) :
                 .build()
         )
 
+        val viewTable = ViewTable("viewHolder", "position")
+
         addFunction(
             FunSpec.builder("onBindViewHolder")
                 .addModifiers(KModifier.OVERRIDE)
@@ -49,7 +51,7 @@ class PagedListAdapterGenerator(private val adapterData: PagedListAdapterData) :
                 .addStatement("val item = getItem(position) ?: return")
                 .addStatement("viewHolder.bind(item)")
                 .addStatement("val itemView = viewHolder.itemView")
-                .addListenerBindingList(rClassName, ViewTable(), adapterData.listeners)
+                .addListenerBindingList(rClassName, viewTable, adapterData.listeners)
                 .build()
         )
     }

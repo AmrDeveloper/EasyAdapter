@@ -40,6 +40,8 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
             .build()
         )
 
+        val viewTable = ViewTable("viewHolder", "position")
+
         addFunction(FunSpec.builder("onBindViewHolder")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("viewHolder", viewHolderQualifiedClassName)
@@ -47,7 +49,7 @@ class ListAdapterGenerator(private val adapterData: ListAdapterData) : AdapterGe
             .addStatement("val item = getItem(position) ?: return")
             .addStatement("viewHolder.bind(item)")
             .addStatement("val itemView = viewHolder.itemView")
-            .addListenerBindingList(rClassName, ViewTable(), adapterData.listeners)
+            .addListenerBindingList(rClassName, viewTable, adapterData.listeners)
             .build()
         )
     }

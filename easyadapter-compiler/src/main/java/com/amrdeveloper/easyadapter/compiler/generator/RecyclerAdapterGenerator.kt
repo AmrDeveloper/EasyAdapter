@@ -56,6 +56,8 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
             .build()
         )
 
+        val viewTable = ViewTable("viewHolder", "position")
+
         addFunction(FunSpec.builder("onBindViewHolder")
             .addModifiers(KModifier.OVERRIDE)
             .addParameter("viewHolder", viewHolderQualifiedClassName)
@@ -63,7 +65,7 @@ class RecyclerAdapterGenerator (private val adapterData: RecyclerAdapterData) : 
             .addStatement("val item = items[position]")
             .addStatement("viewHolder.bind(item)")
             .addStatement("val itemView = viewHolder.itemView")
-            .addListenerBindingList(rClassName, ViewTable(), adapterData.listeners)
+            .addListenerBindingList(rClassName, viewTable, adapterData.listeners)
             .build()
         )
 
