@@ -2,12 +2,14 @@ package com.amrdeveloper.easyadapter.compiler
 
 import com.amrdeveloper.easyadapter.adapter.*
 import com.amrdeveloper.easyadapter.bind.BindExpandable
+import com.amrdeveloper.easyadapter.compiler.data.adapter.AdapterData
 import com.amrdeveloper.easyadapter.compiler.data.bind.BindExpandableData
 import com.amrdeveloper.easyadapter.compiler.generator.*
 import com.amrdeveloper.easyadapter.compiler.parser.AdapterParser
 import com.amrdeveloper.easyadapter.compiler.utils.EasyAdapterLogger
 import com.squareup.kotlinpoet.FileSpec
 import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.Filer
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
@@ -19,6 +21,7 @@ class EasyAdapterProcessor : AbstractProcessor() {
     private lateinit var elementUtils : Elements
     private lateinit var logger: EasyAdapterLogger
     private lateinit var adapterParser: AdapterParser
+    private lateinit var generatedDirectory: Filer
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv)
@@ -26,50 +29,38 @@ class EasyAdapterProcessor : AbstractProcessor() {
             elementUtils = it.elementUtils
             logger = EasyAdapterLogger(it)
             adapterParser = AdapterParser(elementUtils, logger)
+            generatedDirectory = processingEnv.filer
         }
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, environment: RoundEnvironment): Boolean {
-        val generatedDirectory = processingEnv.filer
-
         environment.getElementsAnnotatedWith(RecyclerAdapter::class.java).forEach {
             val adapter = adapterParser.parseRecyclerAdapter(it)
-            FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                .addType(RecyclerAdapterGenerator(adapter).generate()).build()
-                .writeTo(generatedDirectory)
+            generateAdapterSourceFile(adapter, RecyclerAdapterGenerator(adapter))
         }
 
         environment.getElementsAnnotatedWith(ListAdapter::class.java).forEach {
             val adapter = adapterParser.parseListAdapter(it)
-            FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                .addType(ListAdapterGenerator(adapter).generate()).build()
-                .writeTo(generatedDirectory)
+            generateAdapterSourceFile(adapter, ListAdapterGenerator(adapter))
         }
 
         environment.getElementsAnnotatedWith(PagingDataAdapter::class.java).forEach {
-            val pagingAdapter = adapterParser.parsePagingDataAdapter(it)
-            FileSpec.builder(pagingAdapter.adapterPackageName, pagingAdapter.adapterClassName)
-                .addType(PagingDataAdapterGenerator(pagingAdapter).generate()).build()
-                .writeTo(generatedDirectory)
+            val adapter = adapterParser.parsePagingDataAdapter(it)
+            generateAdapterSourceFile(adapter, PagingDataAdapterGenerator(adapter))
         }
 
         environment.getElementsAnnotatedWith(PagedListAdapter::class.java).forEach {
-            val pagedAdapter = adapterParser.parsePagedListAdapter(it)
-            FileSpec.builder(pagedAdapter.adapterPackageName, pagedAdapter.adapterClassName)
-                .addType(PagedListAdapterGenerator(pagedAdapter).generate()).build()
-                .writeTo(generatedDirectory)
+            val adapter = adapterParser.parsePagedListAdapter(it)
+            generateAdapterSourceFile(adapter, PagedListAdapterGenerator(adapter))
         }
 
         environment.getElementsAnnotatedWith(ArrayAdapter::class.java).forEach {
-            val arrayAdapter = adapterParser.parseArrayAdapter(it)
-            FileSpec.builder(arrayAdapter.adapterPackageName, arrayAdapter.adapterClassName)
-                .addType(ArrayAdapterGenerator(arrayAdapter).generate()).build()
-                .writeTo(generatedDirectory)
+            val adapter = adapterParser.parseArrayAdapter(it)
+            generateAdapterSourceFile(adapter, ArrayAdapterGenerator(adapter))
         }
 
         val expandableMap = mutableMapOf<String, BindExpandableData>()
         environment.getElementsAnnotatedWith(BindExpandable::class.java).forEach {
-
             val expandableClass = adapterParser.parseExpandableClass(it)
             val fullClassName = "${expandableClass.modelClassPackageName}.${expandableClass.modelClassName}"
             expandableMap[fullClassName] = expandableClass
@@ -78,14 +69,17 @@ class EasyAdapterProcessor : AbstractProcessor() {
         environment.getElementsAnnotatedWith(ExpandableAdapter::class.java).forEach {
             val expandableAdapter = adapterParser.parseExpandableAdapter(it, expandableMap)
             expandableAdapter?.let { adapter ->
-                FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
-                    .addType(ExpandableAdapterGenerator(adapter).generate()).build()
-                    .writeTo(generatedDirectory)
+                generateAdapterSourceFile(adapter, ExpandableAdapterGenerator(adapter))
             }
-
         }
 
         return true
+    }
+
+    private fun generateAdapterSourceFile(adapter: AdapterData, adapterGenerator: AdapterGenerator) {
+        FileSpec.builder(adapter.adapterPackageName, adapter.adapterClassName)
+            .addType(adapterGenerator.generate()).build()
+            .writeTo(generatedDirectory)
     }
 
     override fun getSupportedAnnotationTypes() = mutableSetOf (
