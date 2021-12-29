@@ -20,7 +20,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val generateUpdateData = annotation.generateUpdateData
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}RecyclerAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}RecyclerAdapter" }
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
         val adapterListeners = parseAdapterListeners(element)
 
@@ -43,7 +43,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val diffUtilContent = annotation.diffUtilContent
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ListAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}ListAdapter" }
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
         val adapterListeners = parseAdapterListeners(element)
 
@@ -66,7 +66,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val diffUtilContent = annotation.diffUtilContent
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}PagingDataAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}PagingDataAdapter" }
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
         val adapterListeners = parseAdapterListeners(element)
 
@@ -89,7 +89,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
         val diffUtilContent = annotation.diffUtilContent
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}PagedListAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}PagedListAdapter" }
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
         val adapterListeners = parseAdapterListeners(element)
 
@@ -111,7 +111,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val annotation = element.getAnnotation(ArrayAdapter::class.java)
         val appPackageName = annotation.appPackageName
         val layoutId = annotation.layoutId
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ArrayAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}ArrayAdapter" }
         val viewBindingDataList = parseAdapterBindingList(element.enclosedElements)
         val adapterListeners = parseAdapterListeners(element)
 
@@ -131,7 +131,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
         val adapterPackageName = elementUtils.getPackageOf(element).toString()
         val annotation = element.getAnnotation(ExpandableAdapter::class.java)
         val appPackageName = annotation.appPackageName
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ExpandableAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}ExpandableAdapter" }
 
         var expandableAdapter : ExpandableAdapterData? = null
         val enclosedElements = element.enclosedElements

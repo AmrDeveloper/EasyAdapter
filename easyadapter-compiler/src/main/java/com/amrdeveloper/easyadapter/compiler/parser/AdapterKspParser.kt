@@ -21,13 +21,11 @@ class AdapterKspParser(private val logger: KSPLogger) {
     fun parseRecyclerAdapter(classDeclaration: KSClassDeclaration): RecyclerAdapterData {
         val className = classDeclaration.simpleName.getShortName()
         val adapterPackageName = classDeclaration.packageName.asString()
-        val recyclerAdapterAnnotation =
-            classDeclaration.getAnnotationsByType(RecyclerAdapter::class).first()
-        val appPackageName = recyclerAdapterAnnotation.appPackageName
-        val layoutId = recyclerAdapterAnnotation.layoutId
-        val generateUpdateData = recyclerAdapterAnnotation.generateUpdateData
-        val adapterClassName =
-            if (recyclerAdapterAnnotation.customClassName.isEmpty()) "${className}RecyclerAdapter" else recyclerAdapterAnnotation.customClassName
+        val annotation = classDeclaration.getAnnotationsByType(RecyclerAdapter::class).first()
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val generateUpdateData = annotation.generateUpdateData
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}RecyclerAdapter" }
         val viewBindingDataList = parseAdapterBindingList(classDeclaration)
         val adapterListeners = parseAdapterListeners(classDeclaration)
 
@@ -47,13 +45,11 @@ class AdapterKspParser(private val logger: KSPLogger) {
     fun parseListAdapter(classDeclaration: KSClassDeclaration): ListAdapterData {
         val className = classDeclaration.simpleName.getShortName()
         val adapterPackageName = classDeclaration.packageName.asString()
-        val listAdapterAnnotation =
-            classDeclaration.getAnnotationsByType(ListAdapter::class).first()
-        val appPackageName = listAdapterAnnotation.appPackageName
-        val layoutId = listAdapterAnnotation.layoutId
-        val diffUtilContent = listAdapterAnnotation.diffUtilContent
-        val adapterClassName =
-            if (listAdapterAnnotation.customClassName.isEmpty()) "${className}ListAdapter" else listAdapterAnnotation.customClassName
+        val annotation = classDeclaration.getAnnotationsByType(ListAdapter::class).first()
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val diffUtilContent = annotation.diffUtilContent
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}ListAdapter" }
         val viewBindingDataList = parseAdapterBindingList(classDeclaration)
         val adapterListeners = parseAdapterListeners(classDeclaration)
 
@@ -73,13 +69,11 @@ class AdapterKspParser(private val logger: KSPLogger) {
     fun parsePagingDataAdapter(classDeclaration: KSClassDeclaration): PagingAdapterData {
         val className = classDeclaration.simpleName.getShortName()
         val adapterPackageName = classDeclaration.packageName.asString()
-        val pagingDataAdapterAnnotation =
-            classDeclaration.getAnnotationsByType(PagingDataAdapter::class).first()
-        val appPackageName = pagingDataAdapterAnnotation.appPackageName
-        val layoutId = pagingDataAdapterAnnotation.layoutId
-        val diffUtilContent = pagingDataAdapterAnnotation.diffUtilContent
-        val adapterClassName =
-            if (pagingDataAdapterAnnotation.customClassName.isEmpty()) "${className}PagingDataAdapter" else pagingDataAdapterAnnotation.customClassName
+        val annotation = classDeclaration.getAnnotationsByType(PagingDataAdapter::class).first()
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val diffUtilContent = annotation.diffUtilContent
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}PagingDataAdapter" }
         val viewBindingDataList = parseAdapterBindingList(classDeclaration)
         val adapterListeners = parseAdapterListeners(classDeclaration)
 
@@ -99,13 +93,11 @@ class AdapterKspParser(private val logger: KSPLogger) {
     fun parsePagedListAdapter(classDeclaration: KSClassDeclaration): PagedListAdapterData {
         val className = classDeclaration.simpleName.getShortName()
         val adapterPackageName = classDeclaration.packageName.asString()
-        val pagedListAnnotation =
-            classDeclaration.getAnnotationsByType(PagedListAdapter::class).first()
-        val appPackageName = pagedListAnnotation.appPackageName
-        val layoutId = pagedListAnnotation.layoutId
-        val diffUtilContent = pagedListAnnotation.diffUtilContent
-        val adapterClassName =
-            if (pagedListAnnotation.customClassName.isEmpty()) "${className}PagedListAdapter" else pagedListAnnotation.customClassName
+        val annotation = classDeclaration.getAnnotationsByType(PagedListAdapter::class).first()
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val diffUtilContent = annotation.diffUtilContent
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}PagedListAdapter" }
         val viewBindingDataList = parseAdapterBindingList(classDeclaration)
         val adapterListeners = parseAdapterListeners(classDeclaration)
 
@@ -125,12 +117,10 @@ class AdapterKspParser(private val logger: KSPLogger) {
     fun parseArrayAdapter(classDeclaration: KSClassDeclaration): ArrayAdapterData {
         val className = classDeclaration.simpleName.getShortName()
         val adapterPackageName = classDeclaration.packageName.asString()
-        val arrayAdapterAnnotation =
-            classDeclaration.getAnnotationsByType(ArrayAdapter::class).first()
-        val appPackageName = arrayAdapterAnnotation.appPackageName
-        val layoutId = arrayAdapterAnnotation.layoutId
-        val adapterClassName =
-            if (arrayAdapterAnnotation.customClassName.isEmpty()) "${className}ArrayAdapter" else arrayAdapterAnnotation.customClassName
+        val annotation = classDeclaration.getAnnotationsByType(ArrayAdapter::class).first()
+        val appPackageName = annotation.appPackageName
+        val layoutId = annotation.layoutId
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}ArrayAdapter" }
         val viewBindingDataList = parseAdapterBindingList(classDeclaration)
         val adapterListeners = parseAdapterListeners(classDeclaration)
 
@@ -151,7 +141,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
         val adapterPackageName = classDeclaration.packageName.asString()
         val annotation = classDeclaration.getAnnotationsByType(ExpandableAdapter::class).first()
         val appPackageName = annotation.appPackageName
-        val adapterClassName = if (annotation.customClassName.isEmpty()) "${className}ExpandableAdapter" else annotation.customClassName
+        val adapterClassName = annotation.customClassName.ifEmpty { "${className}ExpandableAdapter" }
 
         for(property in classDeclaration.getDeclaredProperties()) {
             if (property.isAnnotationPresent(BindExpandableMap::class)) {
