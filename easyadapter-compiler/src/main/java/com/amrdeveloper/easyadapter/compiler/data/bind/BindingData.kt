@@ -15,17 +15,25 @@ abstract class BindingData {
 
     abstract fun generateFieldBinding(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName)
 
-    fun declareViewVariable(builder: FunSpec.Builder, name : String, viewType: String, viewId: String, rClass: ClassName) {
-        builder.addStatement (
-            "val %L=itemView.findViewById<%L>(%T.id.%L)",
-            name, viewType, rClass, viewId
-        )
-    }
-
     fun getBindingValueSetter(): String {
         return if (viewSetterType == ViewSetterType.PROPERTY)
             "$viewClassSetter=item.$fieldName"
         else
             "$viewClassSetter(item.$fieldName)"
+    }
+
+    fun declareViewVariableIfNotExists(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName) : String {
+        return table.resolve(viewId).ifEmpty {
+            val variableName = table.define(viewId)
+            declareViewVariable(builder, variableName, viewClassType, viewId, rClass)
+            variableName
+        }
+    }
+
+    private fun declareViewVariable(builder: FunSpec.Builder, name : String, viewType: String, viewId: String, rClass: ClassName) {
+        builder.addStatement (
+            "val %L=itemView.findViewById<%L>(%T.id.%L)",
+            name, viewType, rClass, viewId
+        )
     }
 }

@@ -15,12 +15,7 @@ data class BindBackgroundColorData (
 ) : BindingData() {
 
     override fun generateFieldBinding(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName) {
-        var variableName = table.resolve(viewId)
-        if (variableName.isEmpty()) {
-            variableName = table.define(viewId)
-            declareViewVariable(builder, variableName, viewClassType, viewId, rClass)
-        }
-
+        val variableName = declareViewVariableIfNotExists(builder, table, rClass)
         builder.addStatement ("$variableName.${getBindingValueSetter()}")
     }
 }
