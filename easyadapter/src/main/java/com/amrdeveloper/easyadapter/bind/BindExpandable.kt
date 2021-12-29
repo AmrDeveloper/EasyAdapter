@@ -4,5 +4,4 @@ package com.amrdeveloper.easyadapter.bind
 @Retention(AnnotationRetention.SOURCE)
 annotation class BindExpandable (
     val layoutId : String,
-    val customClassName : String = "",
 )
