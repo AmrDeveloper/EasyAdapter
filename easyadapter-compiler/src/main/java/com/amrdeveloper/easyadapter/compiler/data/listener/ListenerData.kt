@@ -53,6 +53,6 @@ abstract class ListenerData {
     }
 
     fun getListenerVarName() : String {
-        return "on${viewId.toCamelCase()}${listenerType.shortName}"
+        return "on${modelName}${viewId.toCamelCase()}${listenerType.shortName}"
     }
 }
