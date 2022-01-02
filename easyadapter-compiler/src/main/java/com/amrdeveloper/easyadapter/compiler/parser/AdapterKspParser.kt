@@ -153,7 +153,8 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 val dataTypeArguments = property.type.element?.typeArguments
                 dataTypeArguments?.let {
                     val expandableGroupType = dataTypeArguments[0]
-                    val expandableGroupClassName = expandableGroupType.toTypeName().toString()
+                    var expandableGroupClassName = expandableGroupType.toTypeName().toString()
+                    expandableGroupClassName = expandableGroupClassName.replace("`", "")
                     val groupExpandableData = expandableMap[expandableGroupClassName]
                     if (groupExpandableData == null) {
                         logger.error("Can't find expandable group class with name $expandableGroupClassName", classDeclaration)
@@ -162,7 +163,8 @@ class AdapterKspParser(private val logger: KSPLogger) {
 
                     val expandableItemType = dataTypeArguments[1]
                     val expandableItemList = expandableItemType.type?.element
-                    val expandableItemClassName = expandableItemList?.typeArguments?.first()?.toTypeName().toString()
+                    var expandableItemClassName = expandableItemList?.typeArguments?.first()?.toTypeName().toString()
+                    expandableItemClassName = expandableItemClassName.replace("`", "")
                     val itemExpandableData = expandableMap[expandableItemClassName]
                     if (itemExpandableData == null) {
                         logger.error("Can't find expandable item class with name $itemExpandableData", classDeclaration)
