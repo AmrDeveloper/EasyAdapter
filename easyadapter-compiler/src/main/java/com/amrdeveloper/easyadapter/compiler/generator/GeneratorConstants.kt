@@ -30,6 +30,7 @@ object GeneratorConstants {
     val mapClassName = ClassName("kotlin.collections", "Map")
     val listClassName = ClassName("kotlin.collections", "List")
     val picassoClassName = ClassName("com.squareup.picasso", "Picasso")
+    val coilClassName = ClassName("coil", "Coil")
     val coilImageRequestClassName = ClassName("coil.request", "ImageRequest")
     val glideClassName = ClassName("com.bumptech.glide", "Glide")
 }

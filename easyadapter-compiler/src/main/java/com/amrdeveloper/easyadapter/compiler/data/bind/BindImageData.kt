@@ -22,8 +22,12 @@ data class BindImageData (
 
         val bindingFormat = when (imageLoader) {
             ImageLoader.PICASSO -> "${GeneratorConstants.picassoClassName}.get().load(%L).into(%L)"
-            ImageLoader.COIL -> "${GeneratorConstants.coilImageRequestClassName}.Builder(itemView.context).data(%L).target(%L).build()"
             ImageLoader.GLIDE -> "${GeneratorConstants.glideClassName}.with(itemView.context).load(%L).into(%L)"
+            ImageLoader.COIL -> """
+                ${GeneratorConstants.coilClassName}.imageLoader(itemView.context).enqueue(
+                    ${GeneratorConstants.coilImageRequestClassName}.Builder(itemView.context).data(%L).target(%L).build()
+                )
+            """.trimIndent()
         }
 
         builder.addStatement (bindingFormat, getBindingValueSetter(), variableName)
