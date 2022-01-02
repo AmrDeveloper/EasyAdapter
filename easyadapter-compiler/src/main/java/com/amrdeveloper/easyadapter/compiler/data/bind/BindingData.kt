@@ -23,8 +23,8 @@ abstract class BindingData {
     }
 
     fun declareViewVariableIfNotExists(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName) : String {
-        return table.resolve(viewId).ifEmpty {
-            val variableName = table.define(viewId)
+        return table.resolve(viewId, viewClassType).ifEmpty {
+            val variableName = table.define(viewId, viewClassType)
             declareViewVariable(builder, variableName, viewClassType, viewId, rClass)
             variableName
         }

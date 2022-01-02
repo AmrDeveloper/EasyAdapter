@@ -40,9 +40,9 @@ data class LongClickListenerData (
         if (viewId == "itemView") {
             builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
         } else {
-            var variableName = table.resolve(viewId)
+            var variableName = table.resolve(viewId, viewClassName.canonicalName)
             if (variableName.isEmpty()) {
-                variableName = table.define(viewId)
+                variableName = table.define(viewId, viewClassName.canonicalName)
                 declareViewVariable(builder, variableName, viewClassName, viewId, rClass)
             }
 
