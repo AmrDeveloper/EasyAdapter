@@ -284,6 +284,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 ListenerType.OnClick -> ClickListenerData(modelName, it.viewId)
                 ListenerType.OnLongClick -> LongClickListenerData(modelName, it.viewId)
                 ListenerType.OnTouch -> TouchListenerData(modelName, it.viewId)
+                ListenerType.OnHover -> HoverListenerData(modelName, it.viewId)
                 ListenerType.OnCheckedChange -> CheckedListenerData(modelName, it.viewId)
                 ListenerType.OnTextChange -> TextChangedListenerData(modelName, it.viewId)
             }
