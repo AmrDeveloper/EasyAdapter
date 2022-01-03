@@ -11,7 +11,7 @@ data class LongClickListenerData (
     override val viewId: String,
     override val viewClassName: ClassName = GeneratorConstants.viewClassName,
     override val listenerType: ListenerType = ListenerType.OnLongClick,
-    override val defaultListenerFormat : String = "setOnLongClickListener{ view -> \n %L \n true}"
+    override val defaultListenerFormat : String = "setOnLongClickListener{%L}"
 ) : ListenerData() {
 
     override fun generateInterfaceDeclarations(builder: TypeSpec.Builder, modelClassName: ClassName) {
@@ -24,6 +24,7 @@ data class LongClickListenerData (
                         .addModifiers(KModifier.ABSTRACT)
                         .addParameter("model", modelClassName)
                         .addParameter("view", GeneratorConstants.viewClassName)
+                        .returns(BOOLEAN)
                         .build()
                 )
                 .build()
@@ -33,9 +34,9 @@ data class LongClickListenerData (
     override fun generateBinds(builder: FunSpec.Builder, table: ViewTable, rClass: ClassName) {
         val listenerFunctionName = "on${modelName}${viewId.toCamelCase()}LongClickListener"
         val listenerBinding = """
-            if (::${getListenerVarName()}.isInitialized) {
-                ${getListenerVarName()}.$listenerFunctionName(item, view)
-            }
+            return@setOnLongClickListener if (::${getListenerVarName()}.isInitialized) {
+                ${getListenerVarName()}.$listenerFunctionName(item, it)
+            } else true
         """.trimIndent()
         if (viewId == "itemView") {
             builder.addStatement("itemView.${defaultListenerFormat}", listenerBinding)
@@ -45,7 +46,6 @@ data class LongClickListenerData (
                 variableName = table.define(viewId, viewClassName.canonicalName)
                 declareViewVariable(builder, variableName, viewClassName, viewId, rClass)
             }
-
             builder.addStatement("$variableName.${defaultListenerFormat}", listenerBinding)
         }
     }
