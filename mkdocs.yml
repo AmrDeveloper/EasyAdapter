@@ -1,0 +1,75 @@
+site_name: EasyAdapter
+site_url: https://amrdeveloper.github.io/easyadapter
+site_description: Android Annotation Processing library to generate adapter class from your model
+site_author: AmrDeveloper
+
+copyright: Copyright &copy; 2022 Amr Heshan
+
+repo_name: AmrDeveloper/EasyAdapter
+repo_url: https://github.com/amrdeveloper/easyadapter
+edit_uri: blob/master/docs/
+
+theme:
+  logo: assets/ea-logo.png
+  favicon: assets/ea-logo.png
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Roboto
+  palette: 
+    - scheme: default
+      primary: blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode      
+  features:
+    - header.autohide
+    - navigation.instant
+    - navigation.tracking
+    - navigation.indexes
+    - content.code.annotate
+    - navigation.sections
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - How to use: how_to_use.md
+  - Annotations:
+    - Adapters: annotations/adapters.md
+    - Binds: annotations/binds.md
+    - Listeners: annotations/listeners.md
+  - Contribution:
+    - Support New Adapter: contribution/support_new_adapter.md
+    - Support New Bind: contribution/support_new_bind.md
+    - Support New Listener: contribution/support_new_listener.md
+    - Documentation: contribution/documentation.md
+    - Suggest Fetaure: contribution/suggestion.md
+    - Report Issue: contribution/report.md
+    
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/amrdeveloper
+      name: AmrDeveloper on Github
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/AmrDeveloper
+      name: AmrDeveloper on Twitter
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/amrdeveloper
+      name: AmrDeveloper on Linkedin
+    - icon: fontawesome/brands/medium
+      link: https://amrdeveloper.medium.com
+      name: AmrDeveloper on Medium
+      
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github.min.css
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js
+  - config.js
