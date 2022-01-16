@@ -13,7 +13,7 @@ Android Annotation Processing library to generate adapter easily from your model
 - Supports generating DiffUtil ItemCallback.
 - Supports generating refresh data method for RecyclerAdapter.
 - Supports generating listeners.
-- Supports type checking when useing annotation with invalid data type.
+- Supports type checking when using annotation with invalid data type.
 - Supports default and custom name for the generated Adapter class.
 - Show clear warns and errors.
 
