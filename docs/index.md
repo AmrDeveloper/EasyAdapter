@@ -1,6 +1,6 @@
 # Easy Adapter
 
-Android Annotation Processing library to generate adapter easily from your model
+Android Annotation Processor library to generate adapter class easily from your model with a lot of customization
 
 ## Features
 
