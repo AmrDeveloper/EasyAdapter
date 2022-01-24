@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="ic_ea_launcher_background">#2093F2</color>
+
     <color name="black">#0d1117</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#161b22</color>
