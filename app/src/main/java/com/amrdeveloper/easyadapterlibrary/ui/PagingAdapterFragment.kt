@@ -18,7 +18,7 @@ class PagingAdapterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_list_adapter, container, false)
+        val view = inflater.inflate(R.layout.fragment_paging_adapter, container, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
