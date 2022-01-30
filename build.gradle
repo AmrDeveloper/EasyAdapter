@@ -1,14 +1,29 @@
 buildscript {
+
+    ext {
+        kotlinVersion = '1.6.10'
+        gradlePluginVersion = '7.0.4'
+        mavenPublishVersion = '0.18.0'
+    }
+
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "com.vanniktech:gradle-maven-publish-plugin:$mavenPublishVersion"
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+apply plugin: "com.vanniktech.maven.publish"
+
+allprojects {
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
+    }
 }
