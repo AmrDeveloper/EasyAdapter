@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'maven-publish'
 }
 
 java {
@@ -14,3 +15,16 @@ dependencies {
     implementation 'com.squareup:kotlinpoet-ksp:1.10.2'
     implementation "com.google.devtools.ksp:symbol-processing-api:1.6.10-1.0.2"
 }
+
+// For publishing on Jitpack
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}
+
+apply plugin: "com.vanniktech.maven.publish"
