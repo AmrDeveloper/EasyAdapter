@@ -30,6 +30,22 @@ Example:
 val wallpaper : String
 ```
 
+### @BindGif
+Used to annotate integer which represent the gif raw file name to load it into ImageView
+
+Parameters:
+
+- viewId: the id of the ImageView
+
+- loader: can be GifLoader.GLIDE, GifLoader.COIL
+
+Example:
+
+```kotlin
+@BindImage(GifLoader.COIL, "main_background")
+val wallpaper : Int
+```
+
 ### @BindImageRes
 Used to annotate int which represent the resource id to used as an resoruce for ImageView
 
