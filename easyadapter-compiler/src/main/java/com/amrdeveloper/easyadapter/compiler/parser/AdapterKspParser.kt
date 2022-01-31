@@ -262,6 +262,15 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 viewBindingDataList.add(binding)
             }
 
+            if (it.isAnnotationPresent(BindGif::class)) {
+                if (elementType != "Int") {
+                    logger.error("@BindGif can used only with integer data type", it)
+                }
+                val annotation = it.getAnnotationsByType(BindGif::class).first()
+                val binding = BindGifData(elementName, annotation.viewId, annotation.loader)
+                viewBindingDataList.add(binding)
+            }
+
             if (it.isAnnotationPresent(BindAlpha::class)) {
                 if (elementType != "Float") {
                     logger.error("@BindAlpha can used only with float data type", it)

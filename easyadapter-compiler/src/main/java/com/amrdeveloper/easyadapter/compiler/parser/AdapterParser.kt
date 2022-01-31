@@ -234,6 +234,14 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 viewBindingDataList.add(binding)
             }
 
+            element.getAnnotation(BindGif::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindGif can used only with int data type", element)
+                }
+                val binding = BindGifData(elementName, it.viewId, it.loader)
+                viewBindingDataList.add(binding)
+            }
+
             element.getAnnotation(BindAlpha::class.java)?.let {
                 if (elementType != "float") {
                     logger.error("@BindAlpha can used only with float data type", element)
