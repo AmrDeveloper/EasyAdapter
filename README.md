@@ -3,6 +3,10 @@
   <img src="media/ea-logo.png" width="128px" height="128px"/>
 </p>
 
+![Maven Central](https://img.shields.io/maven-central/v/io.github.amrdeveloper/easyadapter?color=green)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2b074c0ffc1e4ac3b0ddf085e09e940c)](https://www.codacy.com/gh/AmrDeveloper/EasyAdapter/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AmrDeveloper/EasyAdapter&amp;utm_campaign=Badge_Grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/amrdeveloper/easyadapter/badge)](https://www.codefactor.io/repository/github/amrdeveloper/easyadapter)
+
 Android Annotation Processor library to generate adapter class easily from your model with a lot of customization
 
 ```Kotlin
