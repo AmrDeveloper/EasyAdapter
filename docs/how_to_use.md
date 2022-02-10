@@ -1,6 +1,6 @@
 # How to use?
 
-EasyAdapter has 3 type of annotations that help you to generate your adapter
+EasyAdapter has 3 types of annotations that help you to generate your adapter
 
 - Adapters Annotations:
 Used to select the Adapter type and set the list item for it.
@@ -32,3 +32,16 @@ data class Model (
     val avatarAlpha : Float,
 )
 ```
+
+Now after you build the project you will find a generated adapter called `ModelListAdapter`,
+this default name come from the model class name (`Model`) + the adapter name (`ListAdapter`),
+you can change it easily by passing your custom name in the adapter Annotation,
+
+And now you can use this adapter like any other normal adapter
+
+```
+val adapter = ModelListAdapter()
+recyclerView.adapter = adapter
+```
+
+You can find a full documentation and example for each annotation in it section.
