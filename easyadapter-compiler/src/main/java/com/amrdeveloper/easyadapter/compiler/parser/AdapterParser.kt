@@ -256,20 +256,18 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
     private fun parseAdapterListeners(element: Element) : Set<ListenerData> {
         val modelName = element.simpleName.toString()
         val listeners = mutableSetOf<ListenerData>()
-        element.getAnnotationsByType(BindListeners::class.java).forEach { bindListeners ->
-            bindListeners.value.forEach {
-                val listener = when (it.listenerType) {
-                    ListenerType.OnClick -> ClickListenerData(modelName, it.viewId)
-                    ListenerType.OnLongClick -> LongClickListenerData(modelName, it.viewId)
-                    ListenerType.OnTouch -> TouchListenerData(modelName, it.viewId)
-                    ListenerType.OnHover -> HoverListenerData(modelName, it.viewId)
-                    ListenerType.OnCheckedChange -> CheckedListenerData(modelName, it.viewId)
-                    ListenerType.OnTextChange -> TextChangedListenerData(modelName, it.viewId)
-                }
-                val isUnique = listeners.add(listener)
-                if (isUnique.not()) {
-                    logger.warn("You have declared ${it.listenerType} Listener more than one time in the same class", element)
-                }
+        element.getAnnotationsByType(BindListener::class.java).forEach { listener ->
+            val listenerData = when (listener.listenerType) {
+                ListenerType.OnClick -> ClickListenerData(modelName, listener.viewId)
+                ListenerType.OnLongClick -> LongClickListenerData(modelName, listener.viewId)
+                ListenerType.OnTouch -> TouchListenerData(modelName, listener.viewId)
+                ListenerType.OnHover -> HoverListenerData(modelName, listener.viewId)
+                ListenerType.OnCheckedChange -> CheckedListenerData(modelName, listener.viewId)
+                ListenerType.OnTextChange -> TextChangedListenerData(modelName, listener.viewId)
+            }
+            val isUnique = listeners.add(listenerData)
+            if (isUnique.not()) {
+                logger.warn("You have declared ${listener.listenerType} Listener more than one time in the same class", element)
             }
         }
         return listeners
