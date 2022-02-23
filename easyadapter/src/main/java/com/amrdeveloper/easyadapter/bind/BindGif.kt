@@ -41,4 +41,9 @@ annotation class BindGif (
      * The view id without R.id to apply the bind feature on it
      */
     val viewId : String,
+
+    /**
+     * Condition to apply the annotation only if it true
+     */
+    val condition : String = "",
 )
