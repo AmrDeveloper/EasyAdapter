@@ -190,7 +190,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
             val elementType = element.asType().toString()
 
             element.getAnnotation(BindText::class.java)?.let {
-                val binding = BindingTextData(elementName, it.viewId)
+                val binding = BindingTextData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -198,7 +198,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "int") {
                     logger.error("@BindImageRes can used only with int data type", element)
                 }
-                val binding = BindImageResData(elementName, it.viewId)
+                val binding = BindImageResData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -206,7 +206,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "int") {
                     logger.error("@BindBackgroundRes can used only with int data type", element)
                 }
-                val binding = BindBackgroundResData(elementName, it.viewId)
+                val binding = BindBackgroundResData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -214,7 +214,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "int") {
                     logger.error("@BindBackgroundColor can used only with int data type", element)
                 }
-                val binding = BindBackgroundColorData(elementName, it.viewId)
+                val binding = BindBackgroundColorData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -222,7 +222,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "int") {
                     logger.error("@BindVisibility can used only with int data type", element)
                 }
-                val binding = BindVisibilityData(elementName, it.viewId)
+                val binding = BindVisibilityData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -230,7 +230,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "java.lang.String") {
                     logger.error("@BindImage can used only with String data type", element)
                 }
-                val binding = BindImageData(elementName, it.viewId, it.loader)
+                val binding = BindImageData(elementName, it.viewId, it.loader, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -238,7 +238,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "int") {
                     logger.error("@BindGif can used only with int data type", element)
                 }
-                val binding = BindGifData(elementName, it.viewId, it.loader)
+                val binding = BindGifData(elementName, it.viewId, it.loader, it.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -246,7 +246,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 if (elementType != "float") {
                     logger.error("@BindAlpha can used only with float data type", element)
                 }
-                val binding = BindAlphaData(elementName, it.viewId)
+                val binding = BindAlphaData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
         }

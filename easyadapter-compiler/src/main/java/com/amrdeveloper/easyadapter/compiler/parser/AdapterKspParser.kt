@@ -213,7 +213,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
 
             if (it.isAnnotationPresent(BindText::class)) {
                 val annotation = it.getAnnotationsByType(BindText::class).first()
-                val binding = BindingTextData(elementName, annotation.viewId)
+                val binding = BindingTextData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -222,7 +222,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindImageRes can used only with Int data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindImageRes::class).first()
-                val binding = BindImageResData(elementName, annotation.viewId)
+                val binding = BindImageResData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -231,7 +231,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindBackgroundRes can used only with Int data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindBackgroundRes::class).first()
-                val binding = BindBackgroundResData(elementName, annotation.viewId)
+                val binding = BindBackgroundResData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -240,7 +240,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindBackgroundColor can used only with Int data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindBackgroundColor::class).first()
-                val binding = BindBackgroundColorData(elementName, annotation.viewId)
+                val binding = BindBackgroundColorData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -249,7 +249,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindVisibility can used only with Int data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindVisibility::class).first()
-                val binding = BindVisibilityData(elementName, annotation.viewId)
+                val binding = BindVisibilityData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -258,7 +258,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindImage can used only with String data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindImage::class).first()
-                val binding = BindImageData(elementName, annotation.viewId, annotation.loader)
+                val binding = BindImageData(elementName, annotation.viewId, annotation.loader, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -267,7 +267,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindGif can used only with integer data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindGif::class).first()
-                val binding = BindGifData(elementName, annotation.viewId, annotation.loader)
+                val binding = BindGifData(elementName, annotation.viewId, annotation.loader, annotation.condition)
                 viewBindingDataList.add(binding)
             }
 
@@ -276,7 +276,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                     logger.error("@BindAlpha can used only with float data type", it)
                 }
                 val annotation = it.getAnnotationsByType(BindAlpha::class).first()
-                val binding = BindAlphaData(elementName, annotation.viewId)
+                val binding = BindAlphaData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
         }
