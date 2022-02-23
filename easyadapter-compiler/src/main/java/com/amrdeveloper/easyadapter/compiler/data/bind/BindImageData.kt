@@ -11,6 +11,7 @@ data class BindImageData (
     override var fieldName: String,
     override var viewId: String,
     val imageLoader: ImageLoader,
+    override var condition: String,
     override var bindType: BindType = BindType.IMAGE,
     override var viewClassType: String = "android.widget.ImageView",
     override var viewClassSetter: String = "",
@@ -30,6 +31,7 @@ data class BindImageData (
             """.trimIndent()
         }
 
-        builder.addStatement (bindingFormat, getBindingValueSetter(), variableName)
+        val statement = if (condition.isEmpty()) bindingFormat else "if ($condition) $bindingFormat"
+        builder.addStatement (statement, getBindingValueSetter(), variableName)
     }
 }

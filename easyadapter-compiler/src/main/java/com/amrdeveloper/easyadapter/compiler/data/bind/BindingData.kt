@@ -8,6 +8,7 @@ import com.squareup.kotlinpoet.FunSpec
 abstract class BindingData {
     abstract var fieldName: String
     abstract var viewId: String
+    abstract var condition : String
     abstract var bindType: BindType
     abstract var viewClassType: String
     abstract var viewClassSetter: String

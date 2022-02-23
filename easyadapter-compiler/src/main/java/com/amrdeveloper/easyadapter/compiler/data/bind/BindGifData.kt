@@ -11,6 +11,7 @@ data class BindGifData(
     override var fieldName: String,
     override var viewId: String,
     val gifLoader: GifLoader,
+    override var condition: String,
     override var bindType: BindType = BindType.GIF,
     override var viewClassType: String = "android.widget.ImageView",
     override var viewClassSetter: String = "",
@@ -38,7 +39,8 @@ data class BindGifData(
                 """.trimIndent()
             }
         }
-        builder.addStatement (bindingFormat, getBindingValueSetter(), variableName)
+        val statement = if (condition.isEmpty()) bindingFormat else "if ($condition) $bindingFormat"
+        builder.addStatement (statement, getBindingValueSetter(), variableName)
     }
 
 }
