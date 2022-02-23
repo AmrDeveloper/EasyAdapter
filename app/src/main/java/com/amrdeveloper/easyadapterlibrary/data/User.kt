@@ -24,6 +24,6 @@ data class User (
     @BindText("user_name")
     val username : String,
 
-    @BindImage(ImageLoader.COIL, "use_avatar")
+    @BindImage(ImageLoader.COIL, "use_avatar", condition = "item.avatarUrl.isNotEmpty()")
     val avatarUrl : String,
 )
