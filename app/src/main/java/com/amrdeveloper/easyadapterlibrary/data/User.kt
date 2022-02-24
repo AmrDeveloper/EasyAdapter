@@ -1,13 +1,11 @@
 package com.amrdeveloper.easyadapterlibrary.data
 
+import android.graphics.Color
 import com.amrdeveloper.easyadapter.adapter.ArrayAdapter
 import com.amrdeveloper.easyadapter.adapter.ListAdapter
 import com.amrdeveloper.easyadapter.adapter.PagingDataAdapter
 import com.amrdeveloper.easyadapter.adapter.RecyclerAdapter
-import com.amrdeveloper.easyadapter.bind.BindExpandable
-import com.amrdeveloper.easyadapter.bind.BindImage
-import com.amrdeveloper.easyadapter.bind.BindListener
-import com.amrdeveloper.easyadapter.bind.BindText
+import com.amrdeveloper.easyadapter.bind.*
 import com.amrdeveloper.easyadapter.option.ImageLoader
 import com.amrdeveloper.easyadapter.option.ListenerType
 
@@ -26,4 +24,7 @@ data class User (
 
     @BindImage(ImageLoader.COIL, "use_avatar", condition = "item.avatarUrl.isNotEmpty()")
     val avatarUrl : String,
+
+    @BindTextColor("user_name")
+    val textColor : Int = Color.BLACK
 )
