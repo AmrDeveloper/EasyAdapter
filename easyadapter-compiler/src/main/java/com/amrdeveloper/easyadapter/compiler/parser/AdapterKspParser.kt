@@ -279,6 +279,15 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 val binding = BindAlphaData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
+
+            if (it.isAnnotationPresent(BindTextColor::class)) {
+                if (elementType != "Int") {
+                    logger.error("@BindTextColor can used only with integer data type", it)
+                }
+                val annotation = it.getAnnotationsByType(BindTextColor::class).first()
+                val binding = BindTextColorData(elementName, annotation.viewId, annotation.condition)
+                viewBindingDataList.add(binding)
+            }
         }
 
         return viewBindingDataList

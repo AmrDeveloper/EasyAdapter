@@ -249,6 +249,14 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 val binding = BindAlphaData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
+
+            element.getAnnotation(BindTextColor::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindTextColor can used only with integer data type", element)
+                }
+                val binding = BindTextColorData(elementName, it.viewId, it.condition)
+                viewBindingDataList.add(binding)
+            }
         }
         return viewBindingDataList
     }
