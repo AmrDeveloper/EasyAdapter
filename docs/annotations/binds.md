@@ -174,3 +174,25 @@ val backgroundVisibility : Int = View.GONE
 @BindVisibility("main_background", "item.background.isEmpty()")
 val backgroundVisibility : Int = View.GONE
 ```
+
+### @BindTextColor
+
+Used to annotate integers which represent Text color
+
+Parameters:
+
+- viewId: the id of the View
+
+- condition: a condition to used and apply the bind only if this condition is evaluated to true
+
+Examples:
+
+```kotlin
+@BindTextColor("user_name")
+val titleColor : Int = Color.BLACK
+```
+
+```kotlin
+@BindTextColor("user_name", "item.title.isEmpty()")
+val titleColor : Int = Color.BLACK
+```
