@@ -306,6 +306,15 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 val binding = BindLottieUrlData(elementName, annotation.viewId, annotation.condition)
                 viewBindingDataList.add(binding)
             }
+
+            if (it.isAnnotationPresent(BindLottieAsset::class)) {
+                if (elementType != "String") {
+                    logger.error("@BindLottieAsset can used only with string data type", it)
+                }
+                val annotation = it.getAnnotationsByType(BindLottieAsset::class).first()
+                val binding = BindLottieAssetData(elementName, annotation.viewId, annotation.condition)
+                viewBindingDataList.add(binding)
+            }
         }
 
         return viewBindingDataList

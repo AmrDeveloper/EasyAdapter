@@ -12,4 +12,5 @@ enum class BindType {
     TEXT_COLOR,
     LOTTIE_RAW_RES,
     LOTTIE_URL,
+    LOTTIE_ASSET,
 }
