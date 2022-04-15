@@ -25,7 +25,7 @@
 package com.amrdeveloper.easyadapter.bind
 
 /**
- *  Mark model class integer field to used it as a lottie animation url
+ *  Mark model class string field to used it as a lottie animation url
  */
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.SOURCE)
