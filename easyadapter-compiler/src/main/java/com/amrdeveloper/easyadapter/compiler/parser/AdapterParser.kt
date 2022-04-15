@@ -257,6 +257,14 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 val binding = BindTextColorData(elementName, it.viewId, it.condition)
                 viewBindingDataList.add(binding)
             }
+
+            element.getAnnotation(BindLottieRaw::class.java)?.let {
+                if (elementType != "int") {
+                    logger.error("@BindLottieRaw can used only with integer data type", element)
+                }
+                val binding = BindLottieRawData(elementName, it.viewId, it.condition)
+                viewBindingDataList.add(binding)
+            }
         }
         return viewBindingDataList
     }

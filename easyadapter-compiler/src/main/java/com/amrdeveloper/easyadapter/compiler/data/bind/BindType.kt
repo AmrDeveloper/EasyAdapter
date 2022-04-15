@@ -9,5 +9,6 @@ enum class BindType {
     BACKGROUND_RES,
     BACKGROUND_COLOR,
     ALPHA,
-    TEXT_COLOR
+    TEXT_COLOR,
+    LOTTIE_RAW_RES,
 }
