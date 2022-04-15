@@ -196,3 +196,25 @@ val titleColor : Int = Color.BLACK
 @BindTextColor("user_name", "item.title.isEmpty()")
 val titleColor : Int = Color.BLACK
 ```
+
+### @BindLottieRaw
+
+Used to annotate integers which represent lottie animation raw res id
+
+Parameters:
+
+- viewId: the id of the View
+
+- condition: a condition to used and apply the bind only if this condition is evaluated to true
+
+Examples:
+
+```kotlin
+@BindLottieRaw("lottie_view")
+val lottieAnimation : Int = R.raw.animation_file
+```
+
+```kotlin
+@BindLottieRaw("lottie_view", "item.state")
+val lottieAnimation : Int = R.raw.animation_file
+```
