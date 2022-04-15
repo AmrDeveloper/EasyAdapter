@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.1.0 *(2022-04-15)*
+-----------------------------
+
+* Add new annotations for Lottie Animations
+
 Version 1.0.2 *(2022-02-23)*
 -----------------------------
 
