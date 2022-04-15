@@ -218,3 +218,25 @@ val lottieAnimation : Int = R.raw.animation_file
 @BindLottieRaw("lottie_view", "item.state")
 val lottieAnimation : Int = R.raw.animation_file
 ```
+
+### @BindLottieUrl
+
+Used to annotate integers which represent lottie animation url
+
+Parameters:
+
+- viewId: the id of the View
+
+- condition: a condition to used and apply the bind only if this condition is evaluated to true
+
+Examples:
+
+```kotlin
+@BindLottieUrl("lottie_view")
+val lottieAnimationUrl : String
+```
+
+```kotlin
+@BindLottieUrl("lottie_view", "item.state")
+val lottieAnimationUrl : String
+```
