@@ -240,3 +240,25 @@ val lottieAnimationUrl : String
 @BindLottieUrl("lottie_view", "item.state")
 val lottieAnimationUrl : String
 ```
+
+### @BindLottieAsset
+
+Used to annotate integers which represent lottie animation asset name
+
+Parameters:
+
+- viewId: the id of the View
+
+- condition: a condition to used and apply the bind only if this condition is evaluated to true
+
+Examples:
+
+```kotlin
+@BindLottieAsset("lottie_view")
+val lottieAnimationAsset : String
+```
+
+```kotlin
+@BindLottieAsset("lottie_view", "item.state")
+val lottieAnimationAsset : String
+```
