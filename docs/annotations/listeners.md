@@ -17,6 +17,8 @@ BindListener take 2 information
 
 - OnTextChange
 
+- OnFocusChange
+
 2 - view id and you can ignore it if you want this listener to be for your list item layout.
 
 Examples:
