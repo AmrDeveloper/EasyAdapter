@@ -332,6 +332,7 @@ class AdapterKspParser(private val logger: KSPLogger) {
                 ListenerType.OnHover -> HoverListenerData(modelName, it.viewId)
                 ListenerType.OnCheckedChange -> CheckedListenerData(modelName, it.viewId)
                 ListenerType.OnTextChange -> TextChangedListenerData(modelName, it.viewId)
+                ListenerType.OnFocusChange -> FocusChangeListenerData(modelName, it.viewId)
             }
             val isUnique = listeners.add(listener)
             if (isUnique.not()) {

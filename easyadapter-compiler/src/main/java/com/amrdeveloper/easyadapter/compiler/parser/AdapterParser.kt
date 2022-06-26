@@ -296,6 +296,7 @@ class AdapterParser(private val elementUtils: Elements, private val logger: Easy
                 ListenerType.OnHover -> HoverListenerData(modelName, listener.viewId)
                 ListenerType.OnCheckedChange -> CheckedListenerData(modelName, listener.viewId)
                 ListenerType.OnTextChange -> TextChangedListenerData(modelName, listener.viewId)
+                ListenerType.OnFocusChange -> FocusChangeListenerData(modelName, listener.viewId)
             }
             val isUnique = listeners.add(listenerData)
             if (isUnique.not()) {

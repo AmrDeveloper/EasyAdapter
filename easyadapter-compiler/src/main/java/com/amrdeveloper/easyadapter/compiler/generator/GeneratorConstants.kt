@@ -1,6 +1,7 @@
 package com.amrdeveloper.easyadapter.compiler.generator
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.asTypeName
 
 object GeneratorConstants {
 

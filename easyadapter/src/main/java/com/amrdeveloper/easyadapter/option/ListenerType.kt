@@ -57,4 +57,9 @@ enum class ListenerType(val shortName: String) {
      * Used to provide TextWatcher
      */
     OnTextChange("TextChange"),
+
+    /**
+     * Used to provide View.SetOnFocusChangeListener
+     */
+    OnFocusChange("FocusChange")
 }
