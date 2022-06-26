@@ -17,8 +17,8 @@ kotlin {
 }
 
 dependencies {
-    implementation "io.github.amrdeveloper:easyadapter:1.1.0"
+    implementation "io.github.amrdeveloper:easyadapter:1.1.1"
     // kapt or ksp
-    ksp "io.github.amrdeveloper:easyadapter-compiler:1.1.0"
+    ksp "io.github.amrdeveloper:easyadapter-compiler:1.1.1"
 }
 ```
